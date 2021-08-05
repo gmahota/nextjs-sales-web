@@ -10,7 +10,7 @@ import SectionTitle from "../../../components/elements/section-title";
 import Widget from "../../../components/elements/widget";
 
 //Services
-import categoryService from "../../../services/categories";
+import productsService from "../../../services/products";
 
 export default function Workschedules({ category }) {
   const router = useRouter();
@@ -51,11 +51,11 @@ export const getServerSideProps = async (ctx) => {
 
     const { id } = ctx.params;
 
-    const category = await categoryService.get_Category(id);
+    const product = await productsService.get_Product(id);
 
     return {
       props: {
-        category:category,
+        product
       }
     };
   } catch (e) {

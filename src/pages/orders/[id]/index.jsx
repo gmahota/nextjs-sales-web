@@ -10,9 +10,9 @@ import SectionTitle from "../../../components/elements/section-title";
 import Widget from "../../../components/elements/widget";
 
 //Services
-import schoolService from "../../../services/schools";
+import ordersService from "../../../services/orders";
 
-export default function Workschedules({ school }) {
+export default function Order({ order }) {
   const router = useRouter();
   if (router.isFallback) {
     return <p>Carregando...</p>;
@@ -20,12 +20,12 @@ export default function Workschedules({ school }) {
 
   return (
     <>
-      <SectionTitle title="Tables" subtitle={`User - ${school.name}`} />
+      <SectionTitle title="Tables" subtitle={`Order - ${order.name}`} />
       <Widget
         title="Details"
         description={
           <span>
-            {school.name} <code>&lt;Shifts, assign... /&gt;</code>
+            {order.name} <code>&lt;Shifts, assign... /&gt;</code>
           </span>
         }
       >
@@ -37,7 +37,7 @@ export default function Workschedules({ school }) {
 
 
 export const getServerSideProps = async (ctx) => {
-  try {
+ 
     const { 'attendance.token': token } = parseCookies(ctx)
 
     if (!token) {
@@ -51,20 +51,12 @@ export const getServerSideProps = async (ctx) => {
 
     const { id } = ctx.params;
 
-    const school = await schoolService.get_School(id[0]);
+    const order = await ordersService.get_Order(id);
 
     return {
       props: {
-        school:school,
+        order
       }
     };
-  } catch (e) {
-    console.log(e);
-
-    return {
-      props: {
-        school: null,
-      }
-    };
-  }
+  
 };

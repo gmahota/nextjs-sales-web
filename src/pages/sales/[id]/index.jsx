@@ -10,9 +10,9 @@ import SectionTitle from "../../../components/elements/section-title";
 import Widget from "../../../components/elements/widget";
 
 //Services
-import classService from "../../../services/classes";
+import documentService from "../../../services/sales";
 
-export default function Workschedules({ e_class }) {
+export default function Document({ e_class }) {
   const router = useRouter();
   if (router.isFallback) {
     return <p>Carregando...</p>;
@@ -37,7 +37,7 @@ export default function Workschedules({ e_class }) {
 
 
 export const getServerSideProps = async (ctx) => {
-  try {
+ 
     const { 'attendance.token': token } = parseCookies(ctx)
 
     if (!token) {
@@ -51,20 +51,12 @@ export const getServerSideProps = async (ctx) => {
 
     const { id } = ctx.params;
 
-    const e_class = await classService.get_Class(id);
+    const document = await documentService.get_Document(id);
 
     return {
       props: {
-        e_class:e_class,
+        document
       }
     };
-  } catch (e) {
-    console.log(e);
-
-    return {
-      props: {
-        category: null,
-      }
-    };
-  }
+  
 };

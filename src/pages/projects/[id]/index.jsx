@@ -10,9 +10,9 @@ import SectionTitle from "../../../components/elements/section-title";
 import Widget from "../../../components/elements/widget";
 
 //Services
-import categoryService from "../../../services/categories";
+import projectService from "../../../services/projects";
 
-export default function Workschedules({ category }) {
+export default function Project({ project }) {
   const router = useRouter();
   if (router.isFallback) {
     return <p>Carregando...</p>;
@@ -20,12 +20,12 @@ export default function Workschedules({ category }) {
 
   return (
     <>
-      <SectionTitle title="Tables" subtitle={`Category - ${category.description}`} />
+      <SectionTitle title="Tables" subtitle={`Category - ${project.name}`} />
       <Widget
         title="Details"
         description={
           <span>
-            {category.description} <code>&lt;Shifts, assign... /&gt;</code>
+            {project.name} <code>&lt;Shifts, assign... /&gt;</code>
           </span>
         }
       >
@@ -37,7 +37,7 @@ export default function Workschedules({ category }) {
 
 
 export const getServerSideProps = async (ctx) => {
-  try {
+
     const { 'attendance.token': token } = parseCookies(ctx)
 
     if (!token) {
@@ -51,20 +51,12 @@ export const getServerSideProps = async (ctx) => {
 
     const { id } = ctx.params;
 
-    const category = await categoryService.get_Category(id);
+    const project = await projectService.get_Project(id);
 
     return {
       props: {
-        category:category,
+        project
       }
     };
-  } catch (e) {
-    console.log(e);
-
-    return {
-      props: {
-        category: null,
-      }
-    };
-  }
+  
 };
