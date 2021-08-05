@@ -68,13 +68,6 @@ export default function Schools() {
       placeholder: 'Enter the name'
     },
     {
-      label: 'Serie',
-      error: {required: 'Please enter your type - Now only 2021'},
-      name: 'serie',
-      type: 'text',
-      placeholder: 'Enter the - Now only 2021'
-    },
-    {
       label: 'Vat Total',
       name: 'vatTotal',
       type: 'number',
