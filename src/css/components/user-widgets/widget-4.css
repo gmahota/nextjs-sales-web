@@ -1,0 +1,8 @@
+.user-widget-4 {
+  height: calc(theme('spacing.1') * 30);
+  .user-img {
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 1) !important;
+    transform: translateY(-1.5rem);
+  }
+}
+
