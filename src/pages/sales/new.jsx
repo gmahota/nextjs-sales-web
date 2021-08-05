@@ -12,11 +12,11 @@ import FormValidation from './../../components/elements/forms/validation';
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
 export default function Schools() {
-  
+
   const router = useRouter(); //vai buscar o router
 
   const onSubmit = async (data) => {
-    
+
     const url = publicRuntimeConfig.SERVER_URI + `api/sales/documents`;
 
     const response = await fetch(url,
@@ -29,51 +29,89 @@ export default function Schools() {
       }
     );
 
-    router.push("/classes")
+    router.push("/sales")
   }
 
   let items = [
     {
       label: 'Code',
-      error: {required: 'Please enter your code'},
       name: 'code',
       type: 'text',
       placeholder: 'Enter the code'
     },
     {
-      label: 'Year',
-      error: {required: 'Please enter your year'},
-      name: 'year',
-      type: 'number',
+      label: 'Date',
+      name: 'date',
+      type: 'date',
       placeholder: 'Enter the code'
     },
+
     {
-      label: 'Description',
-      error: {required: 'Please enter your description'},
+      label: 'Type',
+      error: {required: 'Please enter your type - Now only FA'},
       name: 'description',
       type: 'text',
-      placeholder: 'Enter the description'
+      placeholder: 'Enter the type - Now only FA'
     },
     {
-      label: 'Limit',
-      name: 'limit',
+      label: 'Serie',
+      error: {required: 'Please enter your type - Now only 2021'},
+      name: 'serie',
+      type: 'text',
+      placeholder: 'Enter the - Now only 2021'
+    },
+    {
+      label: 'Name',
+      error: {required: 'Please enter the name'},
+      name: 'name',
+      type: 'text',
+      placeholder: 'Enter the name'
+    },
+    {
+      label: 'Serie',
+      error: {required: 'Please enter your type - Now only 2021'},
+      name: 'serie',
+      type: 'text',
+      placeholder: 'Enter the - Now only 2021'
+    },
+    {
+      label: 'Vat Total',
+      name: 'vatTotal',
       type: 'number',
-      placeholder: 'Enter the Limit'
+      placeholder: 'Enter the vat Total'
     },
     {
-      label: 'Active',
-      name: 'active',
-      type: 'radio',
+      label: 'Discount Total',
+      name: 'discountTotal',
+      type: 'number',
+      placeholder: 'Enter the discount'
+    },
+    {
+      label: 'Gross Total',
+      name: 'grossTotal',
+      type: 'number',
+      placeholder: 'Enter the Gross Total'
+    },
+    {
+      label: 'Total',
+      name: 'total',
+      type: 'number',
+      placeholder: 'Enter the Total'
+    },
+    {
+      label: 'Status',
+      name: 'status',
+      type: 'select',
       options: [
-        {value: '1', label: 'Yes'},
-        {value: '0', label: 'No'}
+        {value: 'open', label: 'Open'},
+        {value: 'toAproval', label: 'To Approval'}
       ]
     }
   ]
 
   return (
     <>
-      <SectionTitle title="Create a New" subtitle="Class" />
+      <SectionTitle title="Create a New" subtitle="Sales Document" />
 
       <Widget
         title=""
@@ -82,8 +120,8 @@ export default function Schools() {
       >
       <FormValidation items={items} onSubmit={onSubmit}/>
     </Widget>
-     
-      
+
+
     </>)
 }
 

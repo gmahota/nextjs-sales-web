@@ -14,11 +14,11 @@ const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
 
 export default function Schools() {
-  
+
   const router = useRouter(); //vai buscar o router
 
   const onSubmit = async (data) => {
-    
+
     const url = publicRuntimeConfig.SERVER_URI + `api/sales/orders`;
 
     const response = await fetch(url,
@@ -31,83 +31,90 @@ export default function Schools() {
       }
     );
 
-    
-    router.push("/schools")
+
+    router.push("/orders")
   }
 
   let items = [
     {
-      label: 'School Number',
-      error: {required: 'Please enter your School Number'},
-      name: 'schoolNumber',
+      label: 'Code',
+      name: 'code',
       type: 'text',
-      placeholder: 'Enter the School Number'
+      placeholder: 'Enter the code'
+    },
+    {
+      label: 'Date',
+      name: 'date',
+      type: 'date',
+      placeholder: 'Enter the code'
+    },
+
+    {
+      label: 'Type',
+      error: {required: 'Please enter your type - Now only FA'},
+      name: 'description',
+      type: 'text',
+      placeholder: 'Enter the type - Now only FA'
+    },
+    {
+      label: 'Serie',
+      error: {required: 'Please enter your type - Now only 2021'},
+      name: 'serie',
+      type: 'text',
+      placeholder: 'Enter the - Now only 2021'
     },
     {
       label: 'Name',
-      error: {required: 'Please enter your name'},
+      error: {required: 'Please enter the name'},
       name: 'name',
       type: 'text',
       placeholder: 'Enter the name'
     },
     {
-      label: 'Vat Number',
-      error: {required: 'Please enter your Vat Number'},
-      name: 'vat',
+      label: 'Serie',
+      error: {required: 'Please enter your type - Now only 2021'},
+      name: 'serie',
       type: 'text',
-      placeholder: 'Enter the Vat Number'
+      placeholder: 'Enter the - Now only 2021'
     },
     {
-      label: 'Social Security Number',
-      name: 'socialSecurity',
-      type: 'text',
-      placeholder: 'Enter the Social Security Number'
+      label: 'Vat Total',
+      name: 'vatTotal',
+      type: 'number',
+      placeholder: 'Enter the vat Total'
     },
     {
-      label: 'Phone Number',
-      name: 'phoneNumber',
-      type: 'text',
-      placeholder: 'Enter the Phone Number'
+      label: 'Discount Total',
+      name: 'discountTotal',
+      type: 'number',
+      placeholder: 'Enter the discount'
     },
     {
-      label: 'CellPhone',
-      name: 'cellphone',
-      type: 'text',
-      placeholder: 'Enter the CellPhone'
+      label: 'Gross Total',
+      name: 'grossTotal',
+      type: 'number',
+      placeholder: 'Enter the Gross Total'
     },
     {
-      label: 'Email',
-      error: {required: 'Please enter a valid email'},
-      name: 'email',
-      type: 'email',
-      placeholder: 'Enter you email'
+      label: 'Total',
+      name: 'total',
+      type: 'number',
+      placeholder: 'Enter the Total'
     },
-    {
-      label: 'Address',
-      name: 'address',
-      type: 'textarea',
-      placeholder: 'Enter the Address'
-    },    
     {
       label: 'Status',
       name: 'status',
-      type: 'text',
-      placeholder: 'Enter your Status'
-    },
-    {
-      label: 'Active',
-      name: 'active',
-      type: 'radio',
+      type: 'select',
       options: [
-        {value: '1', label: 'Yes'},
-        {value: '0', label: 'No'}
+        {value: 'open', label: 'Open'},
+        {value: 'toAproval', label: 'To Approval'}
       ]
-    },
+    }
   ]
 
   return (
     <>
-      <SectionTitle title="Create a New" subtitle="School" />
+      <SectionTitle title="Create a New" subtitle="Order" />
 
       <Widget
         title=""
@@ -116,8 +123,8 @@ export default function Schools() {
       >
       <FormValidation items={items} onSubmit={onSubmit}/>
     </Widget>
-     
-      
+
+
     </>)
 }
 
