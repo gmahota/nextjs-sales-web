@@ -49,6 +49,8 @@ export default function Documents({
 
     data.items = items;
 
+    console.log(data)
+
     const response = await fetch(url,
       {
         method: "POST",
@@ -66,7 +68,7 @@ export default function Documents({
 
     const list = [...items]
 
-    list.push(data)
+    list.push({ id: 0, grossTotal: data.total, ...data })
 
     setItems(list);
   }
@@ -177,6 +179,13 @@ export default function Documents({
       placeholder: 'Enter the name'
     },
     {
+      label: 'Vat',
+      error: { required: 'Please enter the name' },
+      name: 'vatTotal',
+      type: 'number',
+      placeholder: 'Enter the name'
+    },
+    {
       label: 'Total',
       name: 'total',
       type: 'number',
@@ -184,7 +193,7 @@ export default function Documents({
     }
   ]
 
-  
+
 
   const handleClickAddNew = () => {
 
@@ -279,7 +288,7 @@ export default function Documents({
       []
     );
 
-    return( <Datatable columns={columns} data={items} link="/product"
+    return (<Datatable columns={columns} data={items} link="/product"
       canView={false} canEdit={false} />);
   };
 
@@ -294,7 +303,7 @@ export default function Documents({
       index: 1,
       title: "General",
       active: true,
-      content: <FormValidation items={itemsForm} onSubmit={onSubmit}  />,
+      content: <FormValidation items={itemsForm} onSubmit={onSubmit} />,
     },
     {
       index: 2,
@@ -302,7 +311,7 @@ export default function Documents({
       active: false,
       content: <LineItems />,
     },
-    
+
   ];
 
   return (
