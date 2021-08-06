@@ -8,13 +8,13 @@ import Widget from "../../components/elements/widget";
 import { parseCookies } from 'nookies'
 
 export default function ReportIndividual() {
-  
+
   return (
     <>
       <SectionTitle title="Report's" subtitle="Attendance Repots" />
 
       <Widget title="Filter" description={<span>Filter Conditions</span>}>
-        
+
       </Widget>
     </>
   );
@@ -33,11 +33,11 @@ export const getServerSideProps= async (ctx) => {
   }
   //await apiClient.get('/users')
 
-  
+
 
   return {
     props: {
-      
+
     },
   };
 }
