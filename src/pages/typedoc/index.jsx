@@ -1,20 +1,18 @@
 /* eslint-disable react/display-name */
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
 import { parseCookies } from "nookies";
-
 
 import SectionTitle from "../../components/elements/section-title";
 import Widget from "../../components/elements/widget";
 import Datatable from "../../components/elements/datatable/ActionsTable";
 
-import ordersService from "../../services/orders";
+import typedocService from "../../services/typedoc";
 
 import { FiPlus } from 'react-icons/fi';
 
-export default function Schools({
-  allOrders,
+export default function TypeDoc({
+  allTypes,
 }) {
   const router = useRouter();
 
@@ -26,58 +24,37 @@ export default function Schools({
     const columns = React.useMemo(
       () => [
         {
-          Header: "Id",
-          accessor: "id"
-        },
-        {
           Header: "Code",
           accessor: "code"
         },
         {
-          Header: "Date",
-          accessor: "date",
+          Header: "Description",
+          accessor: "description"
         },
         {
-          Header: "Gross Total",
-          accessor: "grossTotal"
-        },
-        {
-          Header: "Total Disc.",
-          accessor: "discountTotal"
-        },
-        {
-          Header: "Vat Total",
-          accessor: "vatTotal"
-        },
-        {
-          Header: "Total",
-          accessor: "total"
-        },
-        {
-          Header: "Status",
-          accessor: "status"
-        },
-
+          Header: "Type",
+          accessor: "type",
+        }
       ],
       []
     );
-    const data = allOrders;
-    return <Datatable columns={columns} data={data} link="/orders"
+    const data = allTypes;
+    return <Datatable columns={columns} data={data} link="/typedoc"
       canView={true} canEdit={true}
       handlerEdit={handlerEdit} />;
   };
 
   function handlerEdit(id) {
-    router.push(`orders/${id}/edit`)
+    router.push(`typedoc/${id}/edit`)
   }
 
   function handlerAddNew() {
-    router.push("orders/new")
+    router.push("typedoc/new")
   }
 
   return (
     <>
-      <SectionTitle title="Sales Tables" subtitle="Order's" />
+      <SectionTitle title="Tables" subtitle="Customer's" />
       <Widget
         title=""
         description=""
@@ -110,11 +87,11 @@ export const getServerSideProps = async (ctx) => {
   }
   //await apiClient.get('/users')
 
-  const allOrders = await ordersService.get_Orders();
+  const allTypes = await typedocService.get_TypeDocs();
 
   return {
     props: {
-      allOrders
+      allTypes
     },
   };
 };

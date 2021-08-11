@@ -3,9 +3,13 @@ import getConfig from "next/config";
 // Only holds serverRuntimeConfig and publicRuntimeConfig
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
-const get_Customers = async (filter) => {
+const get_TypeDocs = async (type) => {
   try {
-    const url = publicRuntimeConfig.SERVER_URI + "api/base/customers";
+    let url = publicRuntimeConfig.SERVER_URI + "api/sales/typedoc";
+
+    if (!!type) {
+      url += `?type=${type}`;
+    }
 
     let res = [];
 
@@ -14,7 +18,6 @@ const get_Customers = async (filter) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(filter),
     })
       .then((response) => response.json())
       .then((data) => (res = data));
@@ -25,9 +28,9 @@ const get_Customers = async (filter) => {
   }
 };
 
-const get_Customer = async (id) => {
+const get_TypeDoc = async (id) => {
   try {
-    const url = publicRuntimeConfig.SERVER_URI + `api/base/customers/${id}`;
+    const url = publicRuntimeConfig.SERVER_URI + `api/sales/typedoc/${id}`;
 
     let res = {};
 
@@ -41,17 +44,16 @@ const get_Customer = async (id) => {
   }
 };
 
-const get_Customers_Options = async (type) => {
-  let items = await get_Customers(type);
+const get_TypeDocs_Options = async (type) => {
+  let items = await get_TypeDocs(type);
 
   items = items.map((item) => {
     return {
       value: item.code,
-      label: item.name,
+      label: item.description,
     };
   });
 
   return items;
 };
-
-export default { get_Customers, get_Customer, get_Customers_Options };
+export default { get_TypeDocs, get_TypeDoc, get_TypeDocs_Options };

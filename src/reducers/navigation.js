@@ -1,4 +1,4 @@
-import React  from 'react'
+import React from "react";
 import {
   FiSettings,
   FiShoppingBag,
@@ -102,10 +102,15 @@ const initialState = [
             title: "Companies",
             items: [],
           },
+          {
+            url: "/typedoc",
+            title: "Type Document",
+            items: [],
+          },
         ],
       },
     ],
-  }
+  },
 ];
 
 export default function navigation(state = initialState, action) {
