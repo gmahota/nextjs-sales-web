@@ -14,34 +14,25 @@ import { UnderlinedTabs } from "../../components/elements/tabs";
 
 import { FiClipboard } from 'react-icons/fi';
 
+import typedocService from "../../services/typedoc";
+import customerService from "../../services/customers";
+import productService from "../../services/products";
+import projectService from "../../services/projects";
+import * as Math from "../../functions/numbers";
+
 // Only holds serverRuntimeConfig and publicRuntimeConfig
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
 export default function Documents({
-  allCustomers,
-  allProducts,
-  allProjects
+  customerOptions,
+  typeOptions,
+  productOptions,
+  projectOptions
 }) {
 
   const router = useRouter(); //vai buscar o router
 
   const [items, setItems] = useState([])
-  // New Item
-  const [open, setOpen] = React.useState(false)
-  const [itemCode, setItemCode] = useState('')
-  const [itemDescription, setItemDescription] = useState('')
-  const [itemProject, setItemProject] = useState('')
-  const [itemUnity, setItemUnity] = useState('Un')
-  const [itemQuantity, setItemQuantity] = useState(0)
-  const [itemPrice, setItemPrice] = useState(0)
-  const [itemTotal, setItemTotal] = useState(0)
-
-  const [grossTotal, setGrossTotal] = useState(0)
-  const [vatTotal, setVatTotal] = useState(0)
-  const [total, setTotal] = useState(0)
-  const [customerList, setCustomerList] = useState(
-    allCustomers
-  )
 
   const onSubmit = async (data) => {
 
@@ -86,13 +77,12 @@ export default function Documents({
       type: 'date',
       placeholder: 'Enter the code'
     },
-
     {
       label: 'Type',
-      error: { required: 'Please enter your type - Now only FA' },
-      name: 'description',
-      type: 'text',
-      placeholder: 'Enter the type - Now only FA'
+      error: { required: 'Please enter your type' },
+      name: 'type',
+      type: 'select',
+      options: typeOptions
     },
     {
       label: 'Serie',
@@ -100,6 +90,12 @@ export default function Documents({
       name: 'serie',
       type: 'text',
       placeholder: 'Enter the - Now only 2021'
+    },
+    {
+      label: 'Customer',
+      name: 'customer',
+      type: 'select',
+      options: customerOptions
     },
     {
       label: 'Name',
@@ -143,14 +139,60 @@ export default function Documents({
     }
   ]
 
+  const handlerLineCodeChange = async (e, setValue) => {
+    const code = e.target.value;
+
+    const product = productOptions.find(item => item.value === code);
+
+    if (product.label === "") {
+      setValue("description", "")
+      setValue("unity", product.unity || "UN")
+      setValue("quantity", 1)
+      setValue("price", 0)
+      setValue("vatTotal", 0)
+      setValue("total", 0)
+    } else {
+      setValue("description", product.description)
+      setValue("unity", product.unity || "UN")
+      setValue("quantity", 1)
+      setValue("price", Math.rounded(product.price))
+      setValue("vatTotal", Math.rounded(product.price * 0.17))
+      setValue("total", Math.rounded((product.price * 0.17 + product.price)))
+    }
+  }
+
+  const handlerLineQuantityChange = async (e, setValue, getValues) => {
+    const product = productOptions.find(item => item.value === getValues("code"));
+
+    const quantity = e.target.value;
+    const price = Number(getValues("price"));
+    const vatTotal = Number(Math.rounded(price * quantity * 0.17));
+    const total = (price * Number(quantity)) + vatTotal;
+
+    setValue("vatTotal", vatTotal);
+    setValue("total", Math.rounded(total))
+  }
+
+  const handlerLinePriceChange = async (e, setValue, getValues) => {
+    const product = productOptions.find(item => item.value === getValues("code"));
+
+    const price = Number(e.target.value);
+    const quantity = Number(getValues("quantity"));
+    const vatTotal = Number(Math.rounded(price * 0.17));
+    const total = (price * Number(quantity)) + vatTotal
+
+    setValue("vatTotal", vatTotal);
+    setValue("total", total);
+  }
 
   let itemsLines = [
     {
       label: 'Code',
       name: 'code',
-      type: 'text',
-      placeholder: 'Enter the code',
-      ref: { (e => { altert(e) })
+      error: { required: 'Please select the Product' },
+      type: 'select',
+      options: productOptions,
+      onChange: handlerLineCodeChange
     },
     {
       label: 'Description',
@@ -162,39 +204,47 @@ export default function Documents({
     {
       label: 'ItemUnity',
       name: 'unity',
-      type: 'text',
-      placeholder: 'Enter the type - Now only FA'
+      type: 'select',
+      options: [{ label: "Unity", value: "UN" }]
     },
     {
       label: 'Quantity',
       error: { required: 'Please enter your type - Now only 2021' },
       name: 'quantity',
       type: 'number',
-      placeholder: 'Enter the - Now only 2021'
+      placeholder: 'Enter the - Now only 2021',
+      onChange: handlerLineQuantityChange
     },
     {
       label: 'Price',
       error: { required: 'Please enter the name' },
       name: 'price',
       type: 'number',
-      placeholder: 'Enter the name'
+      placeholder: 'Enter the name',
+      onChange: handlerLinePriceChange
     },
     {
       label: 'Vat',
       error: { required: 'Please enter the name' },
       name: 'vatTotal',
       type: 'number',
-      placeholder: 'Enter the name'
+      placeholder: 'Enter the name',
+      readOnly: true
     },
     {
       label: 'Total',
       name: 'total',
       type: 'number',
-      placeholder: 'Enter the vat Total'
+      placeholder: 'Enter the vat Total',
+      readOnly: true
+    },
+    {
+      label: 'Project',
+      name: 'project',
+      type: 'select',
+      options: projectOptions
     }
   ]
-
-
 
   const handleClickAddNew = () => {
 
@@ -357,13 +407,21 @@ export const getServerSideProps = async (ctx) => {
       },
     };
   }
-  //await apiClient.get('/users')
 
+  const typeOptions = await typedocService.get_TypeDocs_Options('COT')
 
+  const customerOptions = await customerService.get_Customers_Options()
+
+  const projectOptions = await projectService.get_Projects_Options()
+
+  const productOptions = await productService.get_Products_Options();
 
   return {
     props: {
-
+      typeOptions,
+      customerOptions,
+      productOptions,
+      projectOptions
     },
   };
 };

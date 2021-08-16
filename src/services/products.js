@@ -54,7 +54,6 @@ const get_Products_Options = async (type) => {
 
   items = [...[{ value: "", label: "" }, ...items]];
 
-  console.log(items);
   return items;
 };
 export default { get_Products, get_Product, get_Products_Options };

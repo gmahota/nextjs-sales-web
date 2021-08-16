@@ -46,7 +46,7 @@ const get_Customers_Options = async (type) => {
 
   items = items.map((item) => {
     return {
-      value: item.code,
+      value: item.id,
       label: item.name,
       ...item,
     };

@@ -9,7 +9,7 @@ import SectionTitle from "../../components/elements/section-title";
 import Widget from "../../components/elements/widget";
 import Datatable from "../../components/elements/datatable/ActionsTable";
 
-import ordersService from "../../services/orders";
+import ordersService from "../../services/sales";
 
 import { FiPlus } from 'react-icons/fi';
 
@@ -110,7 +110,7 @@ export const getServerSideProps = async (ctx) => {
   }
   //await apiClient.get('/users')
 
-  const allOrders = await ordersService.get_Orders();
+  const allOrders = await ordersService.get_Documents();
 
   return {
     props: {

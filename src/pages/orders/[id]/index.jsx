@@ -18,6 +18,8 @@ export default function Order({ order }) {
     return <p>Carregando...</p>;
   }
 
+  
+
   return (
     <>
       <SectionTitle title="Tables" subtitle={`Order - ${order.name}`} />
