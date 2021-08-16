@@ -2,8 +2,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import Alert from "../alerts";
 
-const FormValidation = ({ items, onSubmit, alerts }) => {
-  const { handleSubmit, errors, register, setValue, getValues } = useForm();
+const FormCreate = ({ items, onSubmit, alerts }) => {
+  const { handleSubmit, errors, register } = useForm();
   const onSubmitFn = (data) => {
     if (onSubmit) {
       onSubmit(data);
@@ -106,11 +106,6 @@ const FormValidation = ({ items, onSubmit, alerts }) => {
                   className={`form-select ${
                     errors[item.name] ? "border border-red-500" : ""
                   }`}
-                  onChange={(e) => {
-                    if (!!item.onChange) {
-                      item.onChange(e, setValue);
-                    }
-                  }}
                 >
                   {item.options.map((option, j) => (
                     <option key={j} value={option.value}>
@@ -155,16 +150,10 @@ const FormValidation = ({ items, onSubmit, alerts }) => {
                   ref={item.ref}
                   name={item.name}
                   type={item.type}
-                  onChange={(e) => {
-                    if (!!item.onChange) {
-                      item.onChange(e, setValue, getValues);
-                    }
-                  }}
                   className={`form-input ${
                     errors[item.name] ? "border-red-500" : ""
                   }`}
                   placeholder={item.placeholder}
-                  readOnly={item.readOnly || false}
                 />
                 {!alerts && errors[item.name] && (
                   <div className="form-error">{errors[item.name].message}</div>
@@ -181,4 +170,4 @@ const FormValidation = ({ items, onSubmit, alerts }) => {
     </form>
   );
 };
-export default FormValidation;
+export default FormCreate;

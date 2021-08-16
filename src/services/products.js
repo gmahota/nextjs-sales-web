@@ -27,8 +27,7 @@ const get_Products = async (filter) => {
 
 const get_Product = async (id) => {
   try {
-    const url =
-      publicRuntimeConfig.SERVER_URI + `api/base/products/${id}`;
+    const url = publicRuntimeConfig.SERVER_URI + `api/base/products/${id}`;
 
     let res = {};
 
@@ -41,4 +40,21 @@ const get_Product = async (id) => {
     console.error(e);
   }
 };
-export default { get_Products, get_Product };
+
+const get_Products_Options = async (type) => {
+  let items = await get_Products(type);
+
+  items = items.map((item) => {
+    return {
+      value: item.code,
+      label: item.description,
+      ...item,
+    };
+  });
+
+  items = [...[{ value: "", label: "" }, ...items]];
+
+  console.log(items);
+  return items;
+};
+export default { get_Products, get_Product, get_Products_Options };

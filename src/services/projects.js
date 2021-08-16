@@ -27,8 +27,7 @@ const get_Projects = async (filter) => {
 
 const get_Project = async (id) => {
   try {
-    const url =
-      publicRuntimeConfig.SERVER_URI + `api/base/projects/${id}`;
+    const url = publicRuntimeConfig.SERVER_URI + `api/base/projects/${id}`;
 
     let res = {};
 
@@ -41,4 +40,21 @@ const get_Project = async (id) => {
     console.error(e);
   }
 };
-export default { get_Projects, get_Project };
+
+const get_Projects_Options = async (type) => {
+  let items = await get_Projects(type);
+
+  items = items.map((item) => {
+    return {
+      value: item.code,
+      label: item.description,
+      ...item,
+    };
+  });
+
+  items = [...[{ value: "", label: "" }, ...items]];
+
+  return items;
+};
+
+export default { get_Projects, get_Project, get_Projects_Options };

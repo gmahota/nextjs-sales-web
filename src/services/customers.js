@@ -48,8 +48,11 @@ const get_Customers_Options = async (type) => {
     return {
       value: item.code,
       label: item.name,
+      ...item,
     };
   });
+
+  items = [...[{ value: "", label: "" }, ...items]];
 
   return items;
 };

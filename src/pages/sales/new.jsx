@@ -149,7 +149,8 @@ export default function Documents({
       label: 'Code',
       name: 'code',
       type: 'text',
-      placeholder: 'Enter the code'
+      placeholder: 'Enter the code',
+      ref: { (e => { altert(e) })
     },
     {
       label: 'Description',
