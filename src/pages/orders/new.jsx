@@ -105,8 +105,6 @@ export default function Documents({
 
   const onSubmit = async (data) => {
 
-    const url = publicRuntimeConfig.SERVER_URI + `api/sales/documents`;
-
     setCode(data.code)
 
     setDate(data.date)
@@ -122,7 +120,7 @@ export default function Documents({
     setDiscountTotal(data.totalDiscount)
   }
 
-  const handleSave = async () => {V
+  const handleSave = async () => {
 
     const url = publicRuntimeConfig.SERVER_URI + `api/sales/documents`;
 

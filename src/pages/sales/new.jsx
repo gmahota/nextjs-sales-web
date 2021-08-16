@@ -7,18 +7,20 @@ import { parseCookies } from "nookies";
 import SectionTitle from '../../components/elements/section-title/index';
 import Widget from '../../components/elements/widget/index';
 import FormValidation from './../../components/elements/forms/validation';
+import FormOrder from './../../components/elements/forms/validation';
 
 import Modal from "../../components/partials/modals/create-modal";
 import Datatable from "../../components/elements/datatable/ActionsTable";
 import { UnderlinedTabs } from "../../components/elements/tabs";
 
-import { FiClipboard } from 'react-icons/fi';
+import { FiSave, FiClipboard } from 'react-icons/fi';
 
 import typedocService from "../../services/typedoc";
 import customerService from "../../services/customers";
 import productService from "../../services/products";
 import projectService from "../../services/projects";
 import * as Math from "../../functions/numbers";
+import Dates from "../../functions/datetime";
 
 // Only holds serverRuntimeConfig and publicRuntimeConfig
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
@@ -33,14 +35,109 @@ export default function Documents({
   const router = useRouter(); //vai buscar o router
 
   const [items, setItems] = useState([])
+  const [vatTotal, setVatTotal] = useState(0)
+  const [grossTotal, setGrossTotal] = useState(0)
+  const [total, setTotal] = useState(0)
+  const [discountTotal, setDiscountTotal] = useState(0)
+
+  const [code, setCode] = useState("")
+  const [date, setDate] = useState(new Date())
+  const [type, setType] = useState("COT")
+  const [serie, setSerie] = useState("")
+  const [customer, setCustomer] = useState("")
+  const [name, setName] = useState("")
+  const [status, setStatus] = useState("open")
+
+
+  const itemsTotal = [
+    { title: 'Total Vat', element: <text>{vatTotal}</text> },
+    { title: 'Gross Total', element: <text>{grossTotal}</text> },
+    { title: 'Total Discount', element: <text>{discountTotal}</text> },
+    { title: 'Total', element: <text>{total}</text> },
+  ]
+
+  const itemsResume = [
+    { title: 'Date', element: <text>{Dates.formatDate(date, "yyyy-MM-DD")}</text> },
+    { title: 'Type', element: <text>{type}</text> },
+    { title: 'Customer', element: <text>{customer}</text> },
+    { title: 'Name', element: <text>{name}</text> },
+  ]
+
+  const ResumeDiv = () => {
+    return (<>
+      <div className="table table-auto w-full">
+        <div className="table-row-group">
+          {itemsResume.map((item, i) => (
+            <div className="table-row" key={i}>
+              <div className="table-cell whitespace-nowrap px-2 text-sm">
+                {item.title}
+              </div>
+              <div className="table-cell px-2 whitespace-normal">
+                {item.element}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+    );
+  }
+
+  const TotalDiv = () => {
+    return (<>
+      <div className="table table-auto w-full">
+        <div className="table-row-group">
+          {itemsTotal.map((item, i) => (
+            <div className="table-row" key={i}>
+              <div className="table-cell whitespace-nowrap px-2 text-sm">
+                {item.title}
+              </div>
+              <div className="table-cell px-2 whitespace-normal">
+                {item.element}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+    );
+  }
 
   const onSubmit = async (data) => {
 
+    setCode(data.code)
+
+    setDate(data.date)
+
+    setType(data.type)
+
+    setSerie(data.serie)
+
+    setCustomer(data.customer)
+
+    setName(data.name)
+
+    setDiscountTotal(data.totalDiscount)
+  }
+
+  const handleSave = async () => {
+
     const url = publicRuntimeConfig.SERVER_URI + `api/sales/documents`;
 
-    data.items = items;
-
-    console.log(data)
+    let data = {
+      code,
+      date,
+      type,
+      customer,
+      name,
+      serie,
+      discountTotal,
+      grossTotal,
+      vatTotal,
+      total,
+      status,
+      items
+    }
 
     const response = await fetch(url,
       {
@@ -52,16 +149,60 @@ export default function Documents({
       }
     );
 
-    router.push("/sales")
+    router.push("/orders")
   }
 
-  const onSubmitAddLines = async (data) => {
+  const handlerCode = async (e, setValue) => {
+    const code = e.target.value;
 
-    const list = [...items]
+    setCode(code)
+  }
 
-    list.push({ id: 0, grossTotal: data.total, ...data })
+  const handlerDate = async (e, setValue) => {
+    const code = e.target.value;
 
-    setItems(list);
+    setDate(code)
+  }
+
+  const handlerType = async (e, setValue) => {
+    const code = e.target.value;
+
+    setType(code)
+  }
+
+  const handlerSerie = async (e, setValue) => {
+    const code = e.target.value;
+
+    setSerie(code)
+  }
+
+  const handlerCustomer = async (e, setValue) => {
+    const code = e.target.value;
+
+    const customer = customerOptions.find(item => item.value.toString() === code.toString());
+
+    setValue("name", customer.label)
+
+    setCustomer(code)
+    setName(customer.label)
+  }
+
+  const handlerName = async (e, setValue) => {
+    const code = e.target.value;
+
+    setName(code)
+  }
+
+  const handlerDiscount = async (e, setValue) => {
+    const code = e.target.value;
+
+    setDiscountTotal(code)
+  }
+
+  const handlerStatus = async (e, setValue) => {
+    const code = e.target.value;
+
+    setStatus(code)
   }
 
   let itemsForm = [
@@ -69,64 +210,53 @@ export default function Documents({
       label: 'Code',
       name: 'code',
       type: 'text',
-      placeholder: 'Enter the code'
+      placeholder: 'Enter the code',
+      onChange: handlerCode
     },
     {
       label: 'Date',
       name: 'date',
       type: 'date',
-      placeholder: 'Enter the code'
+      placeholder: 'Enter the code',
+      onChange: handlerDate
     },
     {
       label: 'Type',
       error: { required: 'Please enter your type' },
       name: 'type',
       type: 'select',
-      options: typeOptions
+      options: typeOptions,
+      onChange: handlerType
     },
     {
       label: 'Serie',
       error: { required: 'Please enter your type - Now only 2021' },
       name: 'serie',
       type: 'text',
-      placeholder: 'Enter the - Now only 2021'
+      placeholder: 'Enter the - Now only 2021',
+      onChange: handlerSerie
     },
     {
       label: 'Customer',
       name: 'customer',
       type: 'select',
-      options: customerOptions
+      options: customerOptions,
+      onChange: handlerCustomer
     },
     {
       label: 'Name',
       error: { required: 'Please enter the name' },
       name: 'name',
       type: 'text',
-      placeholder: 'Enter the name'
-    },
-    {
-      label: 'Vat Total',
-      name: 'vatTotal',
-      type: 'number',
-      placeholder: 'Enter the vat Total'
+      placeholder: 'Enter the name',
+      onChange: handlerName
     },
     {
       label: 'Discount Total',
       name: 'discountTotal',
       type: 'number',
-      placeholder: 'Enter the discount'
-    },
-    {
-      label: 'Gross Total',
-      name: 'grossTotal',
-      type: 'number',
-      placeholder: 'Enter the Gross Total'
-    },
-    {
-      label: 'Total',
-      name: 'total',
-      type: 'number',
-      placeholder: 'Enter the Total'
+      placeholder: 'Enter the discount',
+      onChange: handlerDiscount
     },
     {
       label: 'Status',
@@ -135,9 +265,23 @@ export default function Documents({
       options: [
         { value: 'open', label: 'Open' },
         { value: 'toAproval', label: 'To Approval' }
-      ]
+      ],
+      onChange: handlerStatus
     }
   ]
+
+  const onSubmitAddLines = async (data) => {
+
+    const list = [...items]
+
+    list.push({ id: 0, grossTotal: data.total, ...data })
+
+    setVatTotal(list.reduce((acc, line) => acc + Number(line.vatTotal), 0))
+    setGrossTotal(list.reduce((acc, line) => acc + Number(line.price * line.quantity), 0))
+    setTotal(list.reduce((acc, line) => acc + Number(line.total), 0) - Number(discountTotal))
+
+    setItems(list);
+  }
 
   const handlerLineCodeChange = async (e, setValue) => {
     const code = e.target.value;
@@ -240,67 +384,14 @@ export default function Documents({
     },
     {
       label: 'Project',
-      name: 'project',
+      name: 'projectId',
       type: 'select',
       options: projectOptions
     }
   ]
 
-  const handleClickAddNew = () => {
-
-    setOpen(true)
-
-    setItemCode(0)
-    setItemDescription('')
-    setItemProject(0)
-    setItemUnity('Un')
-    setItemQuantity(0)
-    setItemPrice(0)
-    setItemTotal(0)
-
-
-  }
-
-  const handleClose = () => {
-    setOpen(false)
-  }
-
   const handleCancel = () => {
     router.push('/order')
-  }
-
-  const handleItemAdd = async () => {
-    const vatT =
-      Number.parseFloat(itemTotal.toString()) * Number.parseFloat('0.17')
-    const tot = Number.parseFloat(itemTotal.toString()) + vatT
-
-    const item = {
-      id: items.length + 1,
-      code: itemCode,
-      description: itemDescription,
-      project: itemProject,
-      unity: itemUnity,
-      quantity: itemQuantity,
-      price: itemPrice,
-      grossTotal: itemTotal,
-      vatTotal: vatT,
-      total: tot,
-      status: 'pedding'
-    }
-
-    setGrossTotal(itemTotal)
-
-    setVatTotal(vatT)
-
-    setTotal(tot)
-
-    const list = [...items]
-
-    list.push(item)
-
-    setItems(list)
-
-    setOpen(false)
   }
 
   const LineItems = () => {
@@ -346,18 +437,12 @@ export default function Documents({
   const tabs = [
     {
       index: 0,
-      title: "Resume",
-      active: false,
-      content: <div> Ola Mundo </div>,
+      title: "General",
+      active: true,
+      content: <FormOrder items={itemsForm} onSubmit={onSubmit} />,
     },
     {
       index: 1,
-      title: "General",
-      active: true,
-      content: <FormValidation items={itemsForm} onSubmit={onSubmit} />,
-    },
-    {
-      index: 2,
       title: "Lines",
       active: false,
       content: <LineItems />,
@@ -373,22 +458,44 @@ export default function Documents({
         title=""
         description=""
         right={
-          <Modal
-            title="Add new Item."
-            icon={
-              <span className="h-10 w-10 bg-red-100 text-white flex items-center justify-center rounded-full text-lg font-display font-bold">
-                <FiClipboard size={18} className="stroke-current text-red-500" />
-              </span>
-            }
-            body={
-              <FormValidation items={itemsLines} onSubmit={onSubmitAddLines} />
-            }
-            buttonTitle="Save"
-            buttonClassName="btn btn-default btn-rounded bg-green-500 hover:bg-red-600 text-white"
 
-          />
+          <div>
+            <button
+              className="btn btn-default btn-rounded bg-blue-500 hover:bg-blue-600 text-white"
+              type="button"
+              onClick={handleSave}>
+
+              <FiSave className="stroke-current text-white" size={18} />
+              <span>Save</span>
+            </button>
+
+            <Modal
+              title="Add new Item."
+              icon={
+                <span className="h-10 w-10 bg-red-100 text-white flex items-center justify-center rounded-full text-lg font-display font-bold">
+                  <FiClipboard size={18} className="stroke-current text-red-500" />
+                </span>
+              }
+              body={
+                <FormValidation items={itemsLines} onSubmit={onSubmitAddLines} />
+              }
+              buttonTitle="Save"
+              buttonClassName="btn btn-default btn-rounded bg-green-500 hover:bg-red-600 text-white"
+
+            />
+
+          </div>
         }
       >
+        <fieldset>
+          <legend>Resume</legend>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div><ResumeDiv /> </div>
+            <div><TotalDiv /></div>
+          </div>
+        </fieldset>
+
         <UnderlinedTabs tabs={tabs} />
       </Widget>
 
@@ -408,7 +515,7 @@ export const getServerSideProps = async (ctx) => {
     };
   }
 
-  const typeOptions = await typedocService.get_TypeDocs_Options('COT')
+  const typeOptions = await typedocService.get_TypeDocs_Options('FA')
 
   const customerOptions = await customerService.get_Customers_Options()
 
