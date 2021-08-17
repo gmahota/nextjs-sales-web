@@ -13,7 +13,7 @@ import ordersService from "../../services/sales";
 
 import { FiPlus } from 'react-icons/fi';
 
-export default function Schools({
+export default function Orders({
   allOrders,
 }) {
   const router = useRouter();
@@ -30,13 +30,22 @@ export default function Schools({
           accessor: "id"
         },
         {
-          Header: "Code",
-          accessor: "code"
-        },
-        {
           Header: "Date",
           accessor: "date",
         },
+        {
+          Header: "Customer",
+          accessor: "customer",
+        },
+        {
+          Header: "Name",
+          accessor: "name",
+        },
+        {
+          Header: "Code",
+          accessor: "code"
+        },
+
         {
           Header: "Gross Total",
           accessor: "grossTotal"
