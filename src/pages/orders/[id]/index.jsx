@@ -8,30 +8,68 @@ import { parseCookies } from "nookies";
 import Datatable from "../../../components/elements/datatable";
 import SectionTitle from "../../../components/elements/section-title";
 import Widget from "../../../components/elements/widget";
+import { UnderlinedTabs } from "../../../components/elements/tabs";
+
+import OrderResume from "../../../components/partials/sales-order/orderResume";
+import OrderPedding from "../../../components/partials/sales-order/orderPedding";
+
 
 //Services
-import ordersService from "../../../services/orders";
+import ordersService from "../../../services/sales";
 
-export default function Order({ order }) {
+export default function Order({ order, peddingItems }) {
   const router = useRouter();
   if (router.isFallback) {
     return <p>Carregando...</p>;
   }
 
-  
+  const tabs = [
+    {
+      index: 0,
+      title: "Qoute Resume",
+      active: true,
+      content: <OrderResume order={order} />,
+    },
+    {
+      index: 1,
+      title: "Pending Qoute",
+      active: false,
+      content: <OrderPedding order={order} peddingItems={peddingItems} />,
+    },
+    {
+      index: 2,
+      title: "Approval",
+      active: false,
+      content: <div />,
+    },
+    {
+      index: 3,
+      title: "GR",
+      active: false,
+      content: <div />,
+    },
+    {
+      index: 4,
+      title: "Invoices",
+      active: false,
+      content: <div />,
+    },
+    {
+      index: 5,
+      title: "Other's",
+      active: false,
+      content: <div />,
+    },
+  ];
 
   return (
     <>
-      <SectionTitle title="Tables" subtitle={`Order - ${order.name}`} />
+      <SectionTitle title={`Document - ${order.id}`} subtitle={`${order.type.description} - ${order.serie.code}/${order.code}`} />
       <Widget
         title="Details"
-        description={
-          <span>
-            {order.name} <code>&lt;Shifts, assign... /&gt;</code>
-          </span>
-        }
+        description=""
       >
-        {/* <Simple /> */}
+        <UnderlinedTabs tabs={tabs} />
       </Widget>
     </>
   );
@@ -39,26 +77,29 @@ export default function Order({ order }) {
 
 
 export const getServerSideProps = async (ctx) => {
- 
-    const { 'attendance.token': token } = parseCookies(ctx)
 
-    if (!token) {
-      return {
-        redirect: {
-          destination: '/login',
-          permanent: false,
-        }
+  const { 'attendance.token': token } = parseCookies(ctx)
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
       }
     }
+  }
 
-    const { id } = ctx.params;
+  const { id } = ctx.params;
 
-    const order = await ordersService.get_Order(id);
+  const order = await ordersService.get_Document(id);
+  const peddingItems = ordersService.get_PeddingItems(order)
+  console.log(order);
 
-    return {
-      props: {
-        order
-      }
-    };
-  
+  return {
+    props: {
+      order,
+      peddingItems
+    }
+  };
+
 };

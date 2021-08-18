@@ -27,8 +27,7 @@ const get_Orders = async (filter) => {
 
 const get_Order = async (id) => {
   try {
-    const url =
-      publicRuntimeConfig.SERVER_URI + `api/sales/orders/${id}`;
+    const url = publicRuntimeConfig.SERVER_URI + `api/sales/orders/${id}`;
 
     let res = {};
 
@@ -41,4 +40,12 @@ const get_Order = async (id) => {
     console.error(e);
   }
 };
-export default { get_Orders, get_Order };
+
+const get_PeddingItems = (order) => {
+  const items =
+    order.items?.filter((item) => !item.status || item.status === "pedding") ||
+    [];
+
+  return items;
+};
+export default { get_Orders, get_Order, get_PeddingItems };

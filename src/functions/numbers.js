@@ -1,3 +1,4 @@
+import React from "react";
 import accounting from "accounting";
 
 export function random(min, max) {

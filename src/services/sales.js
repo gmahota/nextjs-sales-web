@@ -27,8 +27,7 @@ const get_Documents = async (filter) => {
 
 const get_Document = async (id) => {
   try {
-    const url =
-      publicRuntimeConfig.SERVER_URI + `api/sales/documents/${id}`;
+    const url = publicRuntimeConfig.SERVER_URI + `api/sales/documents/${id}`;
 
     let res = {};
 
@@ -41,4 +40,12 @@ const get_Document = async (id) => {
     console.error(e);
   }
 };
-export default { get_Documents, get_Document };
+
+const get_PeddingItems = (order) => {
+  const items =
+    order.items?.filter((item) => !item.status || item.status === "pedding") ||
+    [];
+
+  return items;
+};
+export default { get_Documents, get_Document, get_PeddingItems };
