@@ -21,7 +21,7 @@ import {
 
 const initialState = [
   {
-    title: "Attendance",
+    title: "Sales - System",
     items: [
       {
         url: "/",
