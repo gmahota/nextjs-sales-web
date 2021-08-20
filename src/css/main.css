@@ -198,3 +198,13 @@ body {
 .text-foursquare {
   color: #207dc5;
 }
+
+#scanner-container {
+  position: relative;
+}
+
+.drawingBuffer {
+  position: absolute;
+  left: 0;
+  top: 0;
+}

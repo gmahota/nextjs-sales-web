@@ -51,7 +51,8 @@ export default function Documents({
 
   const firstUpdate = useRef(true);
   const [isStart, setIsStart] = useState(false);
-  const [barcode, setBarcode] = useState('');
+  const [barcode1, setBarcode1] = useState('');
+  const [barcode2, setBarcode2] = useState('');
 
   useEffect(() => {
     return () => {
@@ -71,7 +72,13 @@ export default function Documents({
 
   const _onDetected = res => {
     // stopScanner();
-    setBarcode(res.codeResult.code);
+    if (barcode1.length === 0) {
+      setBarcode1(res.codeResult.code);
+    } else {
+      setBarcode2(res.codeResult.code);
+      stopScanner();
+    }
+
   };
 
   const startScanner = () => {
@@ -399,9 +406,9 @@ export default function Documents({
 
     const list = [...items]
 
-    list.push({ id: 0, grossTotal: data.total, ...data })
+    list.push({ id: 0, grossTotal: data.total, json: { barcode1, barcode2 }, ...data })
 
-    setVatTotal(list.reduce((acc, line) => acc + Number(line.vatTotal), 0))
+    //setVatTotal(list.reduce((acc, line) => acc + Number(line.vatTotal), 0))
     setGrossTotal(list.reduce((acc, line) => acc + Number(line.price * line.quantity), 0))
     setTotal(list.reduce((acc, line) => acc + Number(line.total), 0) - Number(discountTotal))
 
@@ -464,13 +471,6 @@ export default function Documents({
       onChange: handlerLineCodeChange
     },
     {
-      label: 'Description',
-      name: 'description',
-      type: 'text',
-      placeholder: 'Enter the Description'
-    },
-
-    {
       label: 'ItemUnity',
       name: 'unity',
       type: 'select',
@@ -493,25 +493,11 @@ export default function Documents({
       onChange: handlerLinePriceChange
     },
     {
-      label: 'Vat',
-      error: { required: 'Please enter the name' },
-      name: 'vatTotal',
-      type: 'number',
-      placeholder: 'Enter the name',
-      readOnly: true
-    },
-    {
       label: 'Total',
       name: 'total',
       type: 'number',
       placeholder: 'Enter the vat Total',
       readOnly: true
-    },
-    {
-      label: 'Project',
-      name: 'projectId',
-      type: 'select',
-      options: projectOptions
     }
   ]
 
@@ -522,7 +508,6 @@ export default function Documents({
   const LineItems = () => {
     const columns = React.useMemo(
       () => [
-
         {
           Header: "Id",
           accessor: "id"
@@ -550,7 +535,15 @@ export default function Documents({
         {
           Header: "Total",
           accessor: "total"
-        }
+        },
+        {
+          Header: "Serie 1",
+          accessor: "json.barcode1"
+        },
+        {
+          Header: "Serie 2",
+          accessor: "json.barcode2"
+        },
       ],
       []
     );
@@ -602,7 +595,21 @@ export default function Documents({
                 </span>
               }
               body={
-                <FormValidation items={itemsLines} onSubmit={onSubmitAddLines} />
+                <div class="grid grid-cols-2 gap-4" >
+                  <div>
+                    <FormValidation items={itemsLines} onSubmit={onSubmitAddLines} />
+                  </div>
+                  <div>
+                    <button onClick={() => setIsStart(prevStart => !prevStart)} style={{ marginBottom: 20 }}>{isStart ? 'Stop' : 'Start'}</button>
+                    {isStart && <React.Fragment>
+                      <div id="scanner-container" />
+
+                      <span>Barcode 1: {barcode1}</span>
+                      <br />
+                      <span>Barcode 2: {barcode2}</span>
+                    </React.Fragment>}
+                  </div>
+                </div>
               }
               buttonTitle="Save"
               buttonClassName="btn btn-default btn-rounded bg-green-500 hover:bg-red-600 text-white"
@@ -622,16 +629,7 @@ export default function Documents({
         </fieldset>
 
         <UnderlinedTabs tabs={tabs} />
-
-        <div>
-          <h3>Barcode scanner in React - <a href="https://www.cluemediator.com/" target="_blank" rel="noopener noreferrer">Clue Mediator</a></h3>
-          <button onClick={() => setIsStart(prevStart => !prevStart)} style={{ marginBottom: 20 }}>{isStart ? 'Stop' : 'Start'}</button>
-          {isStart && <React.Fragment>
-            <div id="scanner-container" />
-            <span>Barcode: {barcode}</span>
-          </React.Fragment>}
-        </div>
-      </Widget>
+      </Widget >
 
 
     </>)
