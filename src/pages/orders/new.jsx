@@ -76,7 +76,8 @@ export default function Documents({
       setBarcode1(res.codeResult.code);
     } else {
       setBarcode2(res.codeResult.code);
-      stopScanner();
+      setIsStart(false);
+      //stopScanner();
     }
 
   };
