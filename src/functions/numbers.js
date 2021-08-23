@@ -16,7 +16,7 @@ export function formatCurrency(value) {
 }
 
 export function formatNumber(value) {
-  return accounting.formatMoney(value, "", 2, ",", ".").replace(/\.00$/g, "");
+  return accounting.formatMoney(value, "", 2, ".", ",").replace(/\.00$/g, "");
 }
 
 export function rounded(value, decimals) {
