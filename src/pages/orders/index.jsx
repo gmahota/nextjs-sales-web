@@ -13,6 +13,9 @@ import ordersService from "../../services/sales";
 
 import { FiPlus } from 'react-icons/fi';
 
+import * as Math from "../../functions/numbers";
+import Dates from "../../functions/datetime";
+
 export default function Orders({
   allOrders,
 }) {
@@ -32,6 +35,7 @@ export default function Orders({
         {
           Header: "Date",
           accessor: "date",
+          Cell: (props) => <span>{Dates.formatDate(props.value, "yyyy-MM-DD")}</span>
         },
         {
           Header: "Customer",
@@ -48,19 +52,23 @@ export default function Orders({
 
         {
           Header: "Gross Total",
-          accessor: "grossTotal"
+          accessor: "grossTotal",
+          Cell: (props) => <span>{Math.formatNumber(props.value)}</span>
         },
         {
           Header: "Total Disc.",
-          accessor: "discountTotal"
+          accessor: "discountTotal",
+          Cell: (props) => <span>{Math.formatNumber(props.value)}</span>
         },
         {
           Header: "Vat Total",
-          accessor: "vatTotal"
+          accessor: "vatTotal",
+          Cell: (props) => <span>{Math.formatNumber(props.value)}</span>
         },
         {
           Header: "Total",
-          accessor: "total"
+          accessor: "total",
+          Cell: (props) => <span>{Math.formatNumber(props.value)}</span>
         },
         {
           Header: "Status",
