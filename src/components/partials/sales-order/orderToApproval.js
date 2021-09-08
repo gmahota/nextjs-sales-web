@@ -38,7 +38,7 @@ const Index = ({ order, peddingItems = [] }) => {
   const handlerAddRow = (id) => {
     setSelectedRow(id);
 
-    const item = order.items.find((i) => i.id === id);
+    const item = peddingItems.find((i) => i.id === id);
 
     let tempItem = itemsAproval;
 
@@ -159,19 +159,19 @@ const Index = ({ order, peddingItems = [] }) => {
     try {
       const docItemsVariant = itemsAproval?.map((item) => {
         return {
-          id: 0,
+          id: item.id,
           quantity: item.quantity,
           price: item.price,
           grossTotal: item.grossTotal,
           vatTotal: item.vatTotal,
           vatCode: item.vatCode,
           total: item.total,
-          status: "to approval",
-          documentItemId: item.id,
+          status: "approved",
+          documentItemId: item.documentItemId,
         };
       });
 
-      console.log(itemsAproval);
+      console.log(docItemsVariant);
       const url =
         publicRuntimeConfig.SERVER_URI +
         `api/sales/documents/${order.id}/itemsVariant`;
@@ -197,7 +197,7 @@ const Index = ({ order, peddingItems = [] }) => {
 
   return (
     <>
-      <SectionTitle title="Peding List" />
+      <SectionTitle title="Approval List" />
 
       <Widget
         right={

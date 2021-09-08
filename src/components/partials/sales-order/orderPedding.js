@@ -38,7 +38,7 @@ const Index = ({ order, peddingItems = [] }) => {
   const handlerAddRow = (id) => {
     setSelectedRow(id);
 
-    const item = order.items.find((i) => i.id === id);
+    const item = peddingItems.find((i) => i.id === id);
 
     let tempItem = itemsAproval;
 
@@ -171,7 +171,6 @@ const Index = ({ order, peddingItems = [] }) => {
         };
       });
 
-      console.log(itemsAproval);
       const url =
         publicRuntimeConfig.SERVER_URI +
         `api/sales/documents/${order.id}/itemsVariant`;
@@ -197,7 +196,7 @@ const Index = ({ order, peddingItems = [] }) => {
 
   return (
     <>
-      <SectionTitle title="Peding List" />
+      <SectionTitle title="Pedding List" />
 
       <Widget
         right={

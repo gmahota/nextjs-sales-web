@@ -67,8 +67,13 @@ const initialState = [
             items: [],
           },
           {
+            url: "/gr",
+            title: "GR's",
+            items: [],
+          },
+          {
             url: "/sales",
-            title: "Sales",
+            title: "Invoice",
             items: [],
           },
         ],

@@ -79,22 +79,22 @@ export default function Orders({
       []
     );
     const data = allOrders;
-    return <Datatable columns={columns} data={data} link="/orders"
+    return <Datatable columns={columns} data={data} link="/gr"
       canView={true} canEdit={true}
       handlerEdit={handlerEdit} />;
   };
 
   function handlerEdit(id) {
-    router.push(`orders/${id}/edit`)
+    router.push(`gr/${id}/edit`)
   }
 
   function handlerAddNew() {
-    router.push("orders/new")
+    router.push("gr/new")
   }
 
   return (
     <>
-      <SectionTitle title="Sales Tables" subtitle="Order's" />
+      <SectionTitle title="Sales Tables" subtitle="GR's" />
       <Widget
         title=""
         description=""
@@ -127,7 +127,7 @@ export const getServerSideProps = async (ctx) => {
   }
   //await apiClient.get('/users')
 
-  const allOrders = await ordersService.get_Documents({ type: "COT" });
+  const allOrders = await ordersService.get_Documents({ type: "GR" });
 
   return {
     props: {

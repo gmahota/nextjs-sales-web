@@ -57,42 +57,42 @@ export default function Schools({
         },
 
       ],
-        []
+      []
     );
-  const data = allDocuments;
-  return <Datatable columns={columns} data={data} link="/sales"
-    canView={true} canEdit={true}
-    handlerEdit={handlerEdit} />;
-};
+    const data = allDocuments;
+    return <Datatable columns={columns} data={data} link="/sales"
+      canView={true} canEdit={true}
+      handlerEdit={handlerEdit} />;
+  };
 
-function handlerEdit(id) {
-  router.push(`sales/${id}/edit`)
-}
+  function handlerEdit(id) {
+    router.push(`sales/${id}/edit`)
+  }
 
-function handlerAddNew() {
-  router.push("sales/new")
-}
-return (
-  <>
-    <SectionTitle title="Sales Tables" subtitle="Document's" />
-    <Widget
-      title=""
-      description=""
-      right={
-        <button
-          className="btn btn-default btn-rounded bg-blue-500 hover:bg-blue-600 text-white"
-          type="button"
-          onClick={handlerAddNew}>
+  function handlerAddNew() {
+    router.push("sales/new")
+  }
+  return (
+    <>
+      <SectionTitle title="Sales Tables" subtitle="Document's" />
+      <Widget
+        title=""
+        description=""
+        right={
+          <button
+            className="btn btn-default btn-rounded bg-blue-500 hover:bg-blue-600 text-white"
+            type="button"
+            onClick={handlerAddNew}>
 
-          <FiPlus className="stroke-current text-white" size={18} />
-          <span>Add New</span>
-        </button>
-      }
-    >
-      <Simple />
-    </Widget>
-  </>
-);
+            <FiPlus className="stroke-current text-white" size={18} />
+            <span>Add New</span>
+          </button>
+        }
+      >
+        <Simple />
+      </Widget>
+    </>
+  );
 }
 export const getServerSideProps = async (ctx) => {
   const { "attendance.token": token } = parseCookies(ctx);
@@ -107,7 +107,7 @@ export const getServerSideProps = async (ctx) => {
   }
   //await apiClient.get('/users')
 
-  const allDocuments = await salesService.get_Documents();
+  const allDocuments = await salesService.get_Documents({ type: "Invoice" });
 
   return {
     props: {

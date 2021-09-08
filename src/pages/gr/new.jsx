@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import getConfig from "next/config";
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
@@ -19,8 +19,6 @@ import typedocService from "../../services/typedoc";
 import customerService from "../../services/customers";
 import productService from "../../services/products";
 import projectService from "../../services/projects";
-import documentService from "../../services/sales";
-
 import * as Math from "../../functions/numbers";
 import Dates from "../../functions/datetime";
 
@@ -44,36 +42,12 @@ export default function Documents({
 
   const [code, setCode] = useState("")
   const [date, setDate] = useState(new Date())
-  const [type, setType] = useState("FA")
+  const [type, setType] = useState("GR")
   const [serie, setSerie] = useState("")
   const [customer, setCustomer] = useState("")
   const [name, setName] = useState("")
   const [status, setStatus] = useState("open")
-  const [documentGrOptions, setDocumentGrOptions] = useState([])
-  const [gr, setGr] = useState("")
 
-  useEffect(() => {
-    async function fetchData() {
-      const documentGr = await documentService.get_Documents({
-        type: "GR",
-        customer: customer,
-        status: "open"
-      })
-
-      let list = documentGr?.map(item => {
-        return {
-          label: item.code,
-          value: item.id,
-          ...item,
-        }
-
-      }) || []
-
-      setDocumentGrOptions(list)
-    }
-
-    fetchData()
-  }, [customer])
 
   const itemsTotal = [
     { title: 'Total Vat', element: <text>{vatTotal}</text> },
@@ -175,7 +149,7 @@ export default function Documents({
       }
     );
 
-    router.push("/orders")
+    router.push("/gr")
   }
 
   const handlerCode = async (e, setValue) => {
@@ -211,14 +185,6 @@ export default function Documents({
 
     setCustomer(code)
     setName(customer.label)
-  }
-
-  const handlerDocumentGr = async (e, setValue) => {
-    const code = e.target.value;
-
-    const item = documentGrOptions.find(item => item.value.toString() === code.toString());
-
-    setGr(item)
   }
 
   const handlerName = async (e, setValue) => {
@@ -266,6 +232,7 @@ export default function Documents({
       label: 'Serie',
       error: { required: 'Please enter your type - Now only 2021' },
       name: 'serie',
+      value: '2021',
       type: 'text',
       placeholder: 'Enter the - Now only 2021',
       onChange: handlerSerie
@@ -284,14 +251,6 @@ export default function Documents({
       type: 'text',
       placeholder: 'Enter the name',
       onChange: handlerName
-    },
-    {
-      label: 'GR',
-      error: { required: 'Please enter your the GR' },
-      name: 'type',
-      type: 'select',
-      options: documentGrOptions,
-      onChange: handlerDocumentGr
     },
     {
       label: 'Discount Total',
@@ -488,7 +447,8 @@ export default function Documents({
       title: "Lines",
       active: false,
       content: <LineItems />,
-    }
+    },
+
   ];
 
   return (
@@ -556,7 +516,7 @@ export const getServerSideProps = async (ctx) => {
     };
   }
 
-  const typeOptions = await typedocService.get_TypeDocs_Options('Invoice')
+  const typeOptions = await typedocService.get_TypeDocs_Options('GR')
 
   const customerOptions = await customerService.get_Customers_Options()
 
