@@ -12,13 +12,14 @@ import { UnderlinedTabs } from "../../../components/elements/tabs";
 
 import OrderResume from "../../../components/partials/sales-order/orderResume";
 import OrderPedding from "../../../components/partials/sales-order/orderPedding";
+import OrderToApproval from "../../../components/partials/sales-order/orderToApproval";
 
 import { FiSave, FiClipboard } from 'react-icons/fi';
 
 //Services
 import ordersService from "../../../services/sales";
 
-export default function Order({ order, peddingItems }) {
+export default function Order({ order, peddingItems, itemsToApproval }) {
   const router = useRouter();
   if (router.isFallback) {
     return <p>Carregando...</p>;
@@ -41,7 +42,7 @@ export default function Order({ order, peddingItems }) {
       index: 2,
       title: "Approval",
       active: false,
-      content: <div />,
+      content: <OrderToApproval order={order} peddingItems={itemsToApproval} />,
     },
     {
       index: 3,
@@ -96,12 +97,13 @@ export const getServerSideProps = async (ctx) => {
   const { id } = ctx.params;
 
   const order = await ordersService.get_Document(id);
-  const peddingItems = ordersService.get_PeddingItems(order)
-
+  const peddingItems = await ordersService.get_PeddingItems(id)
+  const itemsToApproval = await ordersService.get_ItemsToApproval(id)
   return {
     props: {
       order,
-      peddingItems
+      peddingItems,
+      itemsToApproval
     }
   };
 
