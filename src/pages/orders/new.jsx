@@ -232,6 +232,7 @@ export default function Documents({
       label: 'Serie',
       error: { required: 'Please enter your type - Now only 2021' },
       name: 'serie',
+      value: '2021',
       type: 'text',
       placeholder: 'Enter the - Now only 2021',
       onChange: handlerSerie

@@ -13,6 +13,7 @@ import { UnderlinedTabs } from "../../../components/elements/tabs";
 import OrderResume from "../../../components/partials/sales-order/orderResume";
 import OrderPedding from "../../../components/partials/sales-order/orderPedding";
 
+import { FiSave, FiClipboard } from 'react-icons/fi';
 
 //Services
 import ordersService from "../../../services/sales";
@@ -62,12 +63,15 @@ export default function Order({ order, peddingItems }) {
     },
   ];
 
+
+
   return (
     <>
       <SectionTitle title={`Document - ${order.id}`} subtitle={`${order.type.description} - ${order.serie.code}/${order.code}`} />
       <Widget
         title="Details"
         description=""
+
       >
         <UnderlinedTabs tabs={tabs} />
       </Widget>
@@ -93,7 +97,6 @@ export const getServerSideProps = async (ctx) => {
 
   const order = await ordersService.get_Document(id);
   const peddingItems = ordersService.get_PeddingItems(order)
-  console.log(order);
 
   return {
     props: {

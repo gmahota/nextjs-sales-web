@@ -10,11 +10,9 @@ import {
   FiChevronUp,
   FiDelete,
   FiChevronRight,
+  FiChevronLeft,
 } from "react-icons/fi";
 
-import { BiGitRepoForked } from "react-icons/bi";
-
-import { HiUserGroup } from "react-icons/hi";
 
 import { PageWithText } from "../pagination";
 
@@ -22,15 +20,10 @@ const Datatable = ({
   columns,
   data,
   handlerAddRow,
+  handlerRemoveRow,
   open = false,
-  canView = false,
-  canEdit = false,
-  canDuplicate = false,
-  canDeleted = false,
-  showUsers = false,
-  handlerEdit,
-  handlerDuplicate,
-  handlerShowUsers,
+  canAdd = false,
+  canRemove = false,
 }) => {
   const router = useRouter();
 
@@ -72,41 +65,27 @@ const Datatable = ({
 
           Cell: ({ row }) => (
             <>
-              <button
-                key={row.values.id || row.values.code}
-                onClick={() => handlerAddRow(row.values.id || row.values.code)}
-              >
-                <FiChevronRight className="stroke-current mr-2" />
-              </button>
-
-              {canEdit === true ? (
-                <button
-                  key={row.values.id || row.values.code}
-                  onClick={() => handlerEdit(row.values.id || row.values.code)}
-                >
-                  <FiEdit className="stroke-current mr-2" />
-                </button>
-              ) : (
-                <></>
-              )}
-              {canDuplicate === true ? (
+              {canAdd === true ? (
                 <button
                   key={row.values.id || row.values.code}
                   onClick={() =>
-                    handlerDuplicate(row.values.id || row.values.code)
+                    handlerAddRow(row.values.id || row.values.code)
                   }
                 >
-                  <BiGitRepoForked className="stroke-current mr-2" />
+                  <FiChevronRight className="stroke-current mr-2" />
                 </button>
               ) : (
                 <></>
               )}
-              {canDeleted === true ? (
+
+              {canRemove === true ? (
                 <button
-                  key={row.values.id}
-                  onClick={() => alert("Not allow to delete")}
+                  key={row.values.id || row.values.code}
+                  onClick={() =>
+                    handlerRemoveRow(row.values.id || row.values.code)
+                  }
                 >
-                  <FiDelete className="stroke-current mr-2" />
+                  <FiChevronLeft className="stroke-current mr-2" />
                 </button>
               ) : (
                 <></>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Router, { useRouter } from "next/router";
 
 import { FiBox } from "react-icons/fi";
@@ -7,27 +7,59 @@ import Widget from "../../elements/widget";
 
 import Datatable from "../../elements/datatable/PeddingTable";
 import { formatCurrency } from "../../../functions/numbers";
+import { FiSave } from "react-icons/fi";
+
+import ordersService from "../../../services/sales";
 
 const Index = ({ order, peddingItems = [] }) => {
+  const router = useRouter();
+
   // Pedding
   const [selectedRow, setSelectedRow] = useState(0);
   const [selectedItem, setSelectedItem] = useState();
   const [totalAmount, setTotalAmount] = useState(0);
   const [openDialog, setOpenDialog] = useState(false);
   const [items, setItems] = useState([]);
+  const [itemsAproval, setItemsAproval] = useState([]);
+
+  useEffect(() => {
+    setTotalAmount(
+      // sum total itemsAproval
+      itemsAproval.reduce((acc, item) => {
+        return acc + item.total;
+      }, 0)
+    );
+  }, [itemsAproval]);
 
   const handlerAddRow = (id) => {
+    setSelectedRow(id);
+
     const item = order.items.find((i) => i.id === id);
 
-    let tempItem = items;
+    item.status = "to approval";
+    item.documentItemId = item.id;
+    item.id = 0;
+
+    let tempItem = itemsAproval;
 
     tempItem.push(item);
 
-    setSelectedItem(item);
+    setItemsAproval(tempItem);
 
-    setSelectedRow(id);
+    setTotalAmount(
+      // sum total itemsAproval
+      itemsAproval.reduce((acc, item) => {
+        return acc + item.total;
+      }, 0)
+    );
 
-    setOpenDialog(true);
+    //setOpenDialog(true);
+  };
+
+  const handlerRemoveRow = (id) => {
+    setItemsAproval(itemsAproval.filter((i) => i.id !== id));
+
+    //setOpenDialog(true);
   };
 
   const PeddingList = () => {
@@ -68,7 +100,12 @@ const Index = ({ order, peddingItems = [] }) => {
     const data = peddingItems;
 
     return (
-      <Datatable columns={columns} data={data} handlerAddRow={handlerAddRow} />
+      <Datatable
+        columns={columns}
+        data={data}
+        handlerAddRow={handlerAddRow}
+        canAdd={true}
+      />
     );
   };
 
@@ -107,17 +144,73 @@ const Index = ({ order, peddingItems = [] }) => {
       ],
       []
     );
-    const data = items;
 
     return (
-      <Datatable columns={columns} data={data} canView={true} canEdit={true} />
+      <Datatable
+        columns={columns}
+        data={itemsAproval}
+        canRemove={true}
+        handlerRemoveRow={handlerRemoveRow}
+      />
     );
+  };
+
+  const handlePeddingSave = async () => {
+    try {
+      const docItemsVariant = itemsAproval;
+
+      console.log(itemsAproval);
+
+      const res = await fetch(`/api/order/${order.id}/itemsVariant`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(docItemsVariant),
+      });
+
+      if (res.status === 200) {
+        router.reload();
+      } else {
+        throw new Error(await res.text());
+      }
+    } catch (e) {
+      console.error(e);
+      // setErrorMessage(e.message)
+    }
   };
 
   return (
     <>
       <SectionTitle title="Peding List" />
-      <Widget>
+
+      <Widget
+        right={
+          <div>
+            <button
+              className="btn btn-default btn-rounded bg-blue-500 hover:bg-blue-600 text-white"
+              type="button"
+              onClick={handlePeddingSave}
+            >
+              <FiSave className="stroke-current text-white" size={18} />
+              <span>Save</span>
+            </button>
+          </div>
+        }
+      >
+        <div>
+          <div className="form-element">
+            <div className="form-label">Total Amount</div>
+            <input
+              name={totalAmount}
+              value={totalAmount}
+              type="text"
+              className="form-input"
+              placeholder="Total Amount"
+              disabled={true}
+            />
+          </div>
+        </div>
         <PeddingList />
       </Widget>
 
