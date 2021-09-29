@@ -44,8 +44,6 @@ const get_Document = async (id) => {
 
     let res = {};
 
-    console.log(url);
-
     await fetch(url)
       .then((response) => response.json())
       .then((data) => (res = data));
@@ -83,7 +81,7 @@ const get_ItemsToApproval = async (id) => {
     //   publicRuntimeConfig.SERVER_URI + `api/sales/documents/${id}/itemsVariant`;
 
     const url = `${baseUrl}api/sales/documents/${id}/itemsVariant`;
-    console.log(url);
+
     const filter = { status: "to approval" };
 
     let res = {};
@@ -99,9 +97,42 @@ const get_ItemsToApproval = async (id) => {
     console.error(e);
   }
 };
+
+const get_Approved_Qoutes = async (id) => {
+  try {
+
+    const url = `${baseUrl}api/sales/customer/${id}/approvedQoutes`;
+
+    let res = [];
+
+    await Repository.get(url).then((response) => (res = response.data));
+
+    res = res.map(document => {
+      let itemsVariants = []
+      document.items?.forEach(item => {
+
+        if (!!item.itemsVariants) {
+          itemsVariants = [...itemsVariants, ...item.itemsVariants]
+        }
+      })
+      document.itemsVariants = itemsVariants
+
+      document.total = document.itemsVariants.reduce((acc, item) => acc + item.total,0)
+
+      return document
+    })
+    console.log(res);
+
+    return res;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export default {
   get_Documents,
   get_Document,
   get_PeddingItems,
   get_ItemsToApproval,
+  get_Approved_Qoutes
 };

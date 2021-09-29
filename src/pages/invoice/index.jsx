@@ -7,12 +7,12 @@ import SectionTitle from "../../components/elements/section-title";
 import Widget from "../../components/elements/widget";
 import Datatable from "../../components/elements/datatable/ActionsTable";
 
-import typedocService from "../../services/typedoc";
+import salesService from "../../services/sales";
 
 import { FiPlus } from 'react-icons/fi';
 
-export default function TypeDoc({
-  allTypes,
+export default function Schools({
+  allDocuments,
 }) {
   const router = useRouter();
 
@@ -24,37 +24,57 @@ export default function TypeDoc({
     const columns = React.useMemo(
       () => [
         {
+          Header: "Id",
+          accessor: "id"
+        },
+        {
           Header: "Code",
           accessor: "code"
         },
         {
-          Header: "Description",
-          accessor: "description"
+          Header: "Date",
+          accessor: "date",
         },
         {
-          Header: "Type",
-          accessor: "type",
-        }
+          Header: "Gross Total",
+          accessor: "grossTotal"
+        },
+        {
+          Header: "Total Disc.",
+          accessor: "discountTotal"
+        },
+        {
+          Header: "Vat Total",
+          accessor: "vatTotal"
+        },
+        {
+          Header: "Total",
+          accessor: "total"
+        },
+        {
+          Header: "Status",
+          accessor: "status"
+        },
+
       ],
       []
     );
-    const data = allTypes;
-    return <Datatable columns={columns} data={data} link="/typedoc"
+    const data = allDocuments;
+    return <Datatable columns={columns} data={data} link="/sales"
       canView={true} canEdit={true}
       handlerEdit={handlerEdit} />;
   };
 
   function handlerEdit(id) {
-    router.push(`typedoc/${id}/edit`)
+    router.push(`sales/${id}/edit`)
   }
 
   function handlerAddNew() {
-    router.push("typedoc/new")
+    router.push("sales/new")
   }
-
   return (
     <>
-      <SectionTitle title="Tables" subtitle="Type Document's" />
+      <SectionTitle title="Sales Tables" subtitle="Document's" />
       <Widget
         title=""
         description=""
@@ -87,11 +107,11 @@ export const getServerSideProps = async (ctx) => {
   }
   //await apiClient.get('/users')
 
-  const allTypes = await typedocService.get_TypeDocs();
+  const allDocuments = await salesService.get_Documents({ type: "Invoice" });
 
   return {
     props: {
-      allTypes
+      allDocuments
     },
   };
 };

@@ -51,7 +51,7 @@ export default function Schools() {
       label: 'Type',
       name: 'type',
       type: 'text',
-      placeholder: 'Enter the Email'
+      placeholder: 'Enter the Type'
     }]
 
   return (

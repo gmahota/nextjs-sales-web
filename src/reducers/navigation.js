@@ -72,7 +72,7 @@ const initialState = [
             items: [],
           },
           {
-            url: "/sales",
+            url: "/invoice",
             title: "Invoice",
             items: [],
           },

@@ -6,12 +6,21 @@ import { parseCookies } from "nookies";
 
 import SectionTitle from '../../components/elements/section-title/index';
 import Widget from '../../components/elements/widget/index';
+
 import FormValidation from './../../components/elements/forms/validation';
 import FormOrder from './../../components/elements/forms/validation';
 
 import Modal from "../../components/partials/modals/create-modal";
 import Datatable from "../../components/elements/datatable/ActionsTable";
 import { UnderlinedTabs } from "../../components/elements/tabs";
+
+
+import Ratings from '../../components/elements/e-commerce/ratings'
+import Colors from '../../components/elements/e-commerce/colors'
+import Brands from '../../components/elements/e-commerce/brands'
+import Categories from '../../components/elements/e-commerce/categories'
+import Products from '../../components/partials/sales-invoice/products'
+import {RangeSlider} from '../../components/elements/sliders'
 
 import { FiSave, FiClipboard } from 'react-icons/fi';
 
@@ -71,6 +80,10 @@ export default function Documents({
       }) || []
 
       setDocumentGrOptions(list)
+
+      const approvedDoc = await documentService.get_Approved_Qoutes(customer)
+
+      setDocumentApproved(approvedDoc)
     }
 
     fetchData()
@@ -477,6 +490,39 @@ export default function Documents({
       canView={false} canEdit={false} />);
   };
 
+  const SelectOrder = () => {
+    return (
+      <>
+        <SectionTitle title="Pages" subtitle="E-commerce" />
+        <Widget>
+          <div className="flex w-full">
+            <div className="w-full lg:w-1/4 p-2">
+              <div className="w-full mb-4">
+                <div className="uppercase font-normal text-xs tracking-wider flex flex-row items-center justify-start w-full">
+                  Categories
+                </div>
+                <Categories />
+              </div>
+
+              <div className="w-full mb-4">
+                <div className="uppercase font-normal text-xs tracking-wider flex flex-row items-center justify-start w-full">
+                  Brand
+                </div>
+                <div className="py-2">
+                  <Brands />
+                </div>
+              </div>
+            </div>
+            <div className="w-3/4 p-2">
+              {documentApproved ?(<Products items={documentApproved}/>):(<></>)}
+
+            </div>
+          </div>
+        </Widget>
+      </>
+    )
+  }
+
   const tabs = [
     {
       index: 0,
@@ -489,7 +535,14 @@ export default function Documents({
       title: "Lines",
       active: false,
       content: <LineItems />,
+    },
+    {
+      index: 2,
+      title: "Select Item",
+      active: false,
+      content: <SelectOrder />,
     }
+
   ];
 
   return (

@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import Category from './category'
 
 const Categories = () => {
