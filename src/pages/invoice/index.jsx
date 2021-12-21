@@ -60,21 +60,21 @@ export default function Schools({
       []
     );
     const data = allDocuments;
-    return <Datatable columns={columns} data={data} link="/sales"
+    return <Datatable columns={columns} data={data} link="/invoice"
       canView={true} canEdit={true}
       handlerEdit={handlerEdit} />;
   };
 
   function handlerEdit(id) {
-    router.push(`sales/${id}/edit`)
+    router.push(`invoice/${id}/edit`)
   }
 
   function handlerAddNew() {
-    router.push("sales/new")
+    router.push("invoice/new")
   }
   return (
     <>
-      <SectionTitle title="Sales Tables" subtitle="Document's" />
+      <SectionTitle title="Invoice Tables" subtitle="Document's" />
       <Widget
         title=""
         description=""

@@ -66,16 +66,16 @@ const initialState = [
             title: "Order's",
             items: [],
           },
-          {
-            url: "/gr",
-            title: "GR's",
-            items: [],
-          },
-          {
-            url: "/invoice",
-            title: "Invoice",
-            items: [],
-          },
+          // {
+          //   url: "/gr",
+          //   title: "GR's",
+          //   items: [],
+          // },
+          // {
+          //   url: "/invoice",
+          //   title: "Invoice",
+          //   items: [],
+          // },
         ],
       },
       {

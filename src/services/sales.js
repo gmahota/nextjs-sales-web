@@ -111,17 +111,29 @@ const get_Approved_Qoutes = async (id) => {
       let itemsVariants = []
       document.items?.forEach(item => {
 
-        if (!!item.itemsVariants) {
-          itemsVariants = [...itemsVariants, ...item.itemsVariants]
-        }
+          item?.itemsVariants?.forEach(itemVariant => {
+            let v = {
+              ...itemVariant,
+              code:item.code,
+              description:item.description,
+              unity:item.unity,
+              project:item.Project
+            }
+            
+            itemsVariants.push(v)
+
+          
+        })
       })
+
       document.itemsVariants = itemsVariants
 
       document.total = document.itemsVariants.reduce((acc, item) => acc + item.total,0)
 
       return document
     })
-    console.log(res);
+    
+    console.debug(res);
 
     return res;
   } catch (e) {
