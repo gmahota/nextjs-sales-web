@@ -21,7 +21,7 @@ import {
 
 const initialState = [
   {
-    title: "Sales - System",
+    title: "Sistema de Cabimentação",
     items: [
       {
         url: "/",
@@ -59,61 +59,15 @@ const initialState = [
       {
         url: "/",
         icon: <FiShoppingBag size={20} />,
-        title: "Sales",
+        title: "Compras",
         items: [
           {
-            url: "/orders",
-            title: "Order's",
+            url: "/buget",
+            title: "Por Aprovar",
             items: [],
-          },
-          {
-            url: "/gr",
-            title: "GR's",
-            items: [],
-          },
-          {
-            url: "/invoice",
-            title: "Invoice",
-            items: [],
-          },
+          }
         ],
-      },
-      {
-        url: "/",
-        icon: <FiSettings size={20} />,
-        title: "Settings",
-        badge: {
-          color: "bg-indigo-500 text-white",
-          text: 6,
-        },
-        items: [
-          {
-            url: "/products",
-            title: "Products",
-            items: [],
-          },
-          {
-            url: "/customers",
-            title: "Customer's",
-            items: [],
-          },
-          {
-            url: "/projects",
-            title: "Project's",
-            items: [],
-          },
-          {
-            url: "/companies",
-            title: "Companies",
-            items: [],
-          },
-          {
-            url: "/typedoc",
-            title: "Type Document",
-            items: [],
-          },
-        ],
-      },
+      }
     ],
   },
 ];

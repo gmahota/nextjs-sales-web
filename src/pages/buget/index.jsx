@@ -46,23 +46,13 @@ export default function Orders({
           accessor: "name",
         },
         {
-          Header: "Code",
-          accessor: "code"
-        },
-
-        {
-          Header: "Gross Total",
-          accessor: "grossTotal",
+          Header: "Orçamentado",
+          accessor: "orc",
           Cell: (props) => <span>{Math.formatNumber(props.value)}</span>
         },
         {
-          Header: "Total Disc.",
-          accessor: "discountTotal",
-          Cell: (props) => <span>{Math.formatNumber(props.value)}</span>
-        },
-        {
-          Header: "Vat Total",
-          accessor: "vatTotal",
+          Header: "Pendente",
+          accessor: "pend",
           Cell: (props) => <span>{Math.formatNumber(props.value)}</span>
         },
         {
@@ -79,22 +69,23 @@ export default function Orders({
       []
     );
     const data = allOrders;
-    return <Datatable columns={columns} data={data} link="/orders"
+
+    return <Datatable columns={columns} data={data} link="/buget"
       canView={true} canEdit={true}
       handlerEdit={handlerEdit} />;
   };
 
   function handlerEdit(id) {
-    router.push(`orders/${id}/edit`)
+    router.push(`buget/${id}/edit`)
   }
 
   function handlerAddNew() {
-    router.push("orders/new")
+    router.push("buget/new")
   }
 
   return (
     <>
-      <SectionTitle title="Sales Tables" subtitle="Order's" />
+      <SectionTitle title="Documentos Pendentes" subtitle="Para Aprovação" />
       <Widget
         title=""
         description=""
@@ -115,19 +106,57 @@ export default function Orders({
   );
 }
 export const getServerSideProps = async (ctx) => {
-  const { "attendance.token": token } = parseCookies(ctx);
 
-  if (!token) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
   //await apiClient.get('/users')
 
-  const allOrders = await ordersService.get_Documents({ type: "COT" });
+  const allOrders = [
+    {
+      "id": 1001,
+      "document": "COT 2022/1",
+      "date": "2020-05-20",
+      "customer": "FastTech",
+      "name": "FastTech",
+      "product": "CS0010",
+      "description": "Madeira 1100x100x40 mm - Chanfuta",
+      "unit": "UN",
+      "quantity": 1,
+      "price": 5000,
+      "total": 5000,
+      "orc":1000,
+      "pend":4000,
+      "account": "611645",
+      "account_description": "Demostração Custo",
+      "business": "1143",
+      "business_description": "Manutenção - FIPAG - Demostração",
+      "required": "Guimarães Mahota",
+      "buget": 1000,
+      "expense": 4000,
+      "status":"Pendente"
+    },
+    {
+      "id": 1002,
+      "document": "REQ 2022/101",
+      "date": "2020-05-20",
+      "customer": "FastTech",
+      "name": "FastTech",
+      "product": "CS0010",
+      "description": "Software de Cabmentação",
+      "unit": "UN",
+      "quantity": 1,
+      "orc":40000,
+      "pend":10000,
+      "price": 50000,
+      "total": 50000,
+      "account": "611645",
+      "account_description": "Demostração Custo",
+      "business": "1143",
+      "business_description": "Manutenção - FIPAG - Demostração",
+      "required": "Guimarães Mahota",
+      "buget": 1000,
+      "expense": 4000,
+      "status":"Pendente"
+    }
+  ];
 
   return {
     props: {

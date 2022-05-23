@@ -155,6 +155,7 @@ const FormValidation = ({ items, onSubmit, alerts }) => {
                   ref={item.ref}
                   name={item.name}
                   type={item.type}
+                  value={item.value}
                   onChange={(e) => {
                     if (!!item.onChange) {
                       item.onChange(e, setValue, getValues);

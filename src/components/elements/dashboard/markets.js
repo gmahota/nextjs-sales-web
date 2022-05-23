@@ -10,27 +10,21 @@ const Markets = () => {
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Country',
+        Header: 'Centro',
         accessor: 'country',
         Cell: props => {
           let {code, name} = {...props.value}
           return (
             <>
-              <Flag size="sm" code={code} />
               <span className="ml-2">{name}</span>
             </>
           )
         }
       },
       {
-        Header: 'Active users',
+        Header: 'Orçamento',
         accessor: 'population',
         Cell: props => <span>{formatNumber(props.value)}</span>
-      },
-      {
-        Header: 'Team members',
-        accessor: 'members',
-        Cell: props => <Avatars items={props.value} />
       },
       {
         Header: 'Progress',

@@ -20,12 +20,12 @@ const Modal = ({title, icon, buttonTitle, buttonClassName, body, handleSave,hand
     setOpen(true)
   }
   const hide = () => {
-    setOpen(false)  
-    handleClear()  
+    setOpen(false)
+    handleClear()
   }
 
   const save=async ()=> {
-    setOpen(false)  
+    setOpen(false)
     await handleSave()
   }
 
@@ -51,7 +51,7 @@ const Modal = ({title, icon, buttonTitle, buttonClassName, body, handleSave,hand
         className="btn btn-default btn-rounded bg-blue-500 hover:bg-blue-600 text-white"
         type="button"
         onClick={show}>
-          
+
         <FiPlus className="stroke-current text-white" size={18} />
             <span>Add New</span>
       </button>
@@ -62,7 +62,7 @@ const Modal = ({title, icon, buttonTitle, buttonClassName, body, handleSave,hand
             className={`modal show ${background === 'dark' ? 'dark' : ''}`}
             data-background={background}>
             <div
-              className="relative w-auto lg:my-4 mx-auto lg:max-w-lg max-w-sm"
+              className=""
               ref={modalRef}>
               <div className="bg-white text-gray-900 border-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-700 border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none">
                 <div className="relative p-4 flex-auto">

@@ -18,11 +18,11 @@ const CustomTooltip = ({active, payload, label}) => {
       <div className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white shadow-lg rounded-lg p-2 text-xs">
         <div className="font-bold">{name}</div>
         <div>
-          <span className="font-bold">Sales:</span>{' '}
+          <span className="font-bold">Desvio:</span>{' '}
           <span className="font-normal">{sales}</span>
         </div>
         <div>
-          <span className="font-bold">Conversions:</span>{' '}
+          <span className="font-bold">Orçamentado:</span>{' '}
           <span className="font-normal">{conversions}</span>
         </div>
       </div>
@@ -33,8 +33,8 @@ const CustomTooltip = ({active, payload, label}) => {
 
 export const Line1 = () => {
   let colors = [
-    {dataKey: 'sales', stroke: getColor('bg-blue-200')},
-    {dataKey: 'conversions', stroke: getColor('bg-blue-400')}
+    {dataKey: 'Desvio', stroke: getColor('bg-blue-200')},
+    {dataKey: 'Orcamentado', stroke: getColor('bg-blue-400')}
   ]
   const labels = [
     'Jan',
@@ -53,8 +53,8 @@ export const Line1 = () => {
   const data = Array.from(Array(12).keys()).map(i => {
     return {
       name: labels[i],
-      sales: random(100, 200),
-      conversions: random(150, 250)
+      Desvio: random(100, 200),
+      Orcamentado: random(150, 250)
     }
   })
 

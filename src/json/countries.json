@@ -1,6 +1,6 @@
 [
   {
-    "name": "China",
+    "name": "Maputo 1",
     "alpha2Code": "CN",
     "alpha3Code": "CHN",
     "capital": "Beijing",
@@ -10,7 +10,7 @@
     "nativeName": "中国"
   },
   {
-    "name": "India",
+    "name": "Baixa",
     "alpha2Code": "IN",
     "alpha3Code": "IND",
     "capital": "New Delhi",
@@ -20,7 +20,7 @@
     "nativeName": "भारत"
   },
   {
-    "name": "United States of America",
+    "name": "Nhangune",
     "alpha2Code": "US",
     "alpha3Code": "USA",
     "capital": "Washington, D.C.",
@@ -30,7 +30,7 @@
     "nativeName": "United States"
   },
   {
-    "name": "Indonesia",
+    "name": "Xai-xai",
     "alpha2Code": "ID",
     "alpha3Code": "IDN",
     "capital": "Jakarta",

@@ -1,197 +1,172 @@
 import React, { useState, useEffect } from "react";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import getConfig from "next/config";
 
 import { FiBox } from "react-icons/fi";
 import SectionTitle from "../../elements/section-title";
 import Widget from "../../elements/widget";
 
-import Datatable from "../../elements/datatable/PeddingTable";
-import { formatCurrency } from "../../../functions/numbers";
-import { FiSave } from "react-icons/fi";
+import Modal from "../../../components/partials/modals/create-modal";
+import FormValidation from '../../../components/elements/forms/validation';
 
-import ordersService from "../../../services/sales";
+import Datatable from "../../elements/datatable/PeddingTable";
+
+import { FiSave,FiChevronRight, FiClipboard } from 'react-icons/fi';
 
 // Only holds serverRuntimeConfig and publicRuntimeConfig
-const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
+const { publicRuntimeConfig } = getConfig();
 
 const Index = ({ order, peddingItems = [] }) => {
   const router = useRouter();
 
-  // Pedding
-  const [selectedRow, setSelectedRow] = useState(0);
-  const [selectedItem, setSelectedItem] = useState();
-  const [totalAmount, setTotalAmount] = useState(0);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [items, setItems] = useState([]);
-  const [itemsAproval, setItemsAproval] = useState([]);
+  const [items, setItems] = useState([])
 
-  useEffect(() => {
-    setTotalAmount(
-      // sum total itemsAproval
-      itemsAproval.reduce((acc, item) => {
-        return acc + item.total;
-      }, 0)
-    );
-  }, [itemsAproval]);
+  const handleSave = async () => {
 
-  const handlerAddRow = (id) => {
-    setSelectedRow(id);
+    router.push("/orders")
+  }
 
-    const item = peddingItems.find((i) => i.id === id);
+  const onSubmitAddLines = async (data) => {
 
-    let tempItem = itemsAproval;
 
-    tempItem.push(item);
-
-    setItemsAproval(tempItem);
-
-    setTotalAmount(
-      // sum total itemsAproval
-      itemsAproval.reduce((acc, item) => {
-        return acc + item.total;
-      }, 0)
-    );
-
-    //setOpenDialog(true);
-  };
-
-  const handlerRemoveRow = (id) => {
-    setItemsAproval(itemsAproval.filter((i) => i.id !== id));
-
-    //setOpenDialog(true);
-  };
-
-  const PeddingList = () => {
-    const columns = React.useMemo(
-      () => [
-        {
-          Header: "Id",
-          accessor: "id",
-        },
-        {
-          Header: "Quantity",
-          accessor: "quantity",
-        },
-        {
-          Header: "Price",
-          accessor: "price",
-        },
-        {
-          Header: "Gross Total",
-          accessor: "grossTotal",
-        },
-        {
-          Header: "Vat Total",
-          accessor: "vatTotal",
-        },
-
-        {
-          Header: "Total",
-          accessor: "total",
-        },
-        {
-          Header: "Status",
-          accessor: "status",
-        },
-      ],
-      []
-    );
-    const data = peddingItems;
-
-    return (
-      <Datatable
-        columns={columns}
-        data={data}
-        handlerAddRow={handlerAddRow}
-        canAdd={true}
-      />
-    );
-  };
-
-  const ItemsToAproval = () => {
-    const columns = React.useMemo(
-      () => [
-        {
-          Header: "Id",
-          accessor: "id",
-        },
-        {
-          Header: "Quantity",
-          accessor: "quantity",
-        },
-        {
-          Header: "Price",
-          accessor: "price",
-        },
-        {
-          Header: "Gross Total",
-          accessor: "grossTotal",
-        },
-        {
-          Header: "Vat Total",
-          accessor: "vatTotal",
-        },
-
-        {
-          Header: "Total",
-          accessor: "total",
-        },
-        {
-          Header: "Status",
-          accessor: "status",
-        },
-      ],
-      []
-    );
-
-    return (
-      <Datatable
-        columns={columns}
-        data={itemsAproval}
-        canRemove={true}
-        handlerRemoveRow={handlerRemoveRow}
-      />
-    );
-  };
-
-  const handlePeddingSave = async () => {
-    try {
-      const docItemsVariant = itemsAproval?.map((item) => {
-        return {
-          id: 0,
-          quantity: item.quantity,
-          price: item.price,
-          grossTotal: item.grossTotal,
-          vatTotal: item.vatTotal,
-          vatCode: item.vatCode,
-          total: item.total,
-          status: "to approval",
-          documentItemId: item.id,
-        };
-      });
-
-      const url =
-        publicRuntimeConfig.SERVER_URI +
-        `api/sales/documents/${order.id}/itemsVariant`;
-
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ docItemsVariant: docItemsVariant }),
-      });
-
-      if (res.status === 200) {
-        router.reload();
-      } else {
-        throw new Error(await res.text());
-      }
-    } catch (e) {
-      console.error(e);
-      // setErrorMessage(e.message)
+    let item = {
+      id: "P1001",
+      ccusto1: "Departamento IT",
+      ccusto2: "Departamento Manutenção",
+      unity: "UN",
+      quantity: "1",
+      price: 4000,
+      total: 4000
     }
+
+    const list = [...items]
+
+    list.push(item)
+
+    setItems(list);
+  }
+
+  let itemsLines = [
+    {
+      label: 'Produto',
+      name: 'item',
+      error: { required: 'Selecione o Produto' },
+      type: 'select',
+      options: [{
+        label: 'P001',
+        value: 'Madeira 1100x100x40 mm - Chanfuta'
+      }]
+    },
+    {
+      label: 'Custo',
+      name: 'custo',
+      type: 'text',
+      value: "Fipag Sul - Departamento IT",
+      readOnly: true
+    },
+    {
+      label: 'Pendente',
+      name: 'pendente',
+      type: 'number',
+      value: 4000,
+      readOnly: true
+    }
+  ]
+
+  const LineItems = () => {
+    const columns = React.useMemo(
+      () => [
+
+        {
+          Header: "item",
+          accessor: "id"
+        },
+        {
+          Header: "Custo Antigo",
+          accessor: "ccusto1"
+        },
+        {
+          Header: 'Custo Novo',
+          accessor: 'ccusto2'
+        },
+        {
+          Header: "Unity",
+          accessor: "unity"
+        },
+        {
+          Header: "Qnt.",
+          accessor: "quantity"
+        },
+        {
+          Header: "Price",
+          accessor: "price"
+        },
+        {
+          Header: "Total",
+          accessor: "total"
+        }
+      ],
+      []
+    );
+
+    return (<Datatable columns={columns} data={items} link="/product"
+      canView={false} canEdit={false} />);
+  };
+
+  const SimpleTable = () => {
+    const columns = React.useMemo(
+      () => [
+        {
+          Header: "Id",
+          accessor: "id"
+        },
+        {
+          Header: "Descrição",
+          accessor: "desc"
+        },
+        {
+          Header: "Orçamento",
+          accessor: "orc",
+        },
+        {
+          Header: "Usado",
+          accessor: "usado",
+        },
+        {
+          Header: "Disponivel",
+          accessor: "disp"
+        },
+        {
+          Header: "Acção",
+          accessor: "status",
+
+          Cell: (props) => <FiChevronRight/>
+        },
+
+      ],
+      []
+    );
+    const data = [
+      {
+        id: "1001",
+        desc: "Departamento Manutenção",
+        orc: 200000,
+        usado: 200000,
+        disp: 180000,
+        status: ""
+      },
+      {
+        id: "1001",
+        desc: "Departamento Procrument",
+        orc: 100000,
+        usado: 80000,
+        disp: 20000,
+        status: ""
+      }
+    ];
+
+    return <Datatable columns={columns} data={data} link="/buget"
+      canView={true} canEdit={true} />;
   };
 
   return (
@@ -204,34 +179,39 @@ const Index = ({ order, peddingItems = [] }) => {
             <button
               className="btn btn-default btn-rounded bg-blue-500 hover:bg-blue-600 text-white"
               type="button"
-              onClick={handlePeddingSave}
-            >
+              onClick={handleSave}>
+
               <FiSave className="stroke-current text-white" size={18} />
               <span>Save</span>
             </button>
+
+            <Modal
+              title="Realocação de Orçamento"
+              icon={
+                <span className="h-10 w-10 bg-red-100 text-white flex items-center justify-center rounded-full text-lg font-display font-bold">
+                  <FiClipboard size={18} className="stroke-current text-red-500" />
+                </span>
+              }
+              body={
+                <div>
+                  <FormValidation items={itemsLines} onSubmit={onSubmitAddLines} />
+
+                  <SimpleTable />
+                </div>
+
+
+              }
+              buttonTitle="Save"
+              buttonClassName="btn btn-default btn-rounded bg-green-500 hover:bg-red-600 text-white"
+
+            />
           </div>
         }
       >
-        <div>
-          <div className="form-element">
-            <div className="form-label">Total Amount</div>
-            <input
-              name={totalAmount}
-              value={totalAmount}
-              type="text"
-              className="form-input"
-              placeholder="Total Amount"
-              disabled={true}
-            />
-          </div>
-        </div>
-        <PeddingList />
+
+        <LineItems />
       </Widget>
 
-      <SectionTitle title="Items to Aproval" />
-      <Widget>
-        <ItemsToAproval />
-      </Widget>
     </>
   );
 };
