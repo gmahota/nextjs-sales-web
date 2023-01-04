@@ -447,7 +447,7 @@ export default function Documents({
   ]
 
   const handleCancel = () => {
-    router.push('/order')
+    router.push('/invoice')
   }
 
   const LineItems = () => {
