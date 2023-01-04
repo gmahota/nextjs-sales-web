@@ -31,37 +31,7 @@ export default function Order({ order, peddingItems, itemsToApproval }) {
       title: "Qoute Resume",
       active: true,
       content: <OrderResume order={order} />,
-    },
-    {
-      index: 1,
-      title: "Pending Qoute",
-      active: false,
-      content: <OrderPedding order={order} peddingItems={peddingItems} />,
-    },
-    {
-      index: 2,
-      title: "Approval",
-      active: false,
-      content: <OrderToApproval order={order} peddingItems={itemsToApproval} />,
-    },
-    {
-      index: 3,
-      title: "GR",
-      active: false,
-      content: <div />,
-    },
-    {
-      index: 4,
-      title: "Invoices",
-      active: false,
-      content: <div />,
-    },
-    {
-      index: 5,
-      title: "Other's",
-      active: false,
-      content: <div />,
-    },
+    }
   ];
 
 
